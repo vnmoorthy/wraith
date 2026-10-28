@@ -22,7 +22,7 @@ def main() -> None:
     if len(sys.argv) > 1 and sys.argv[1] == "status":
         print(json.dumps(config.status(), indent=2))
         return
-    print(f"\n  👻 WRAITH — the war room that builds itself\n  → http://localhost:{config.PORT}\n")
+    print(f"\n  👻 WRAITH — the war room that builds itself\n  → http://localhost:{config.PORT}\n", flush=True)
     uvicorn.run("wraith.server:app", host="0.0.0.0", port=config.PORT, log_level="warning")
 
 

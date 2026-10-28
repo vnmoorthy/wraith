@@ -29,7 +29,7 @@ export function Header({ view, setView, health, ablate, toggleAblate, xray, setX
     { id: 'replays', label: 'Replays' },
   ]
   return (
-    <header className="relative z-20 flex items-center gap-6 border-b border-[var(--hair)] bg-white px-6 py-3">
+    <header className={clsx('relative z-20 flex items-center gap-6 border-b border-[var(--hair)] bg-white px-6 py-3', new URLSearchParams(location.search).get('film') === '1' && '[&_nav]:hidden [&>div:last-child]:hidden')}>
       <div className="flex items-center gap-2.5">
         <GhostMark size={26} className="text-bone" />
         <span className="serif text-[22px] font-medium tracking-tight text-bone">Wraith</span>
@@ -59,8 +59,8 @@ export function Header({ view, setView, health, ablate, toggleAblate, xray, setX
               className={clsx('flex items-center gap-1.5 whitespace-nowrap text-[12.5px] transition',
                 off ? 'text-[var(--danger)] line-through' : 'text-ash hover:text-bone')}>
               <span className={clsx('h-1.5 w-1.5 rounded-full', !h && 'animate-pulse')}
-                style={{ background: off ? 'var(--danger)' : !h ? '#d6d3cc' : h.ok ? 'var(--ok)' : 'var(--danger)' }} />
-              {meta.name}
+                style={{ background: off ? 'var(--danger)' : !h ? '#d6d3cc' : !h.ok ? 'var(--danger)' : p === 'one' && !/discord/i.test(h.detail) ? 'var(--warn)' : 'var(--ok)' }} />
+              {meta.name}{p === 'one' && h?.ok && !/discord/i.test(h.detail) && !off ? ' · no Discord' : ''}
             </button>
           )
         })}

@@ -9,3 +9,6 @@ __pycache__/
 .onerc
 .claude/
 dist/
+video/clips/
+video/takes/
+video/*.mp4

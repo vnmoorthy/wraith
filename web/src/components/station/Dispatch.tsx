@@ -38,7 +38,7 @@ export function DispatchConsole({ spec, building }: { spec: ComponentSpec; build
   const { run, setOp, op } = useStation()
   const body = useDispatchBody()
   const [preview, setPreview] = useState('')
-  const [dry, setDry] = useState(false)
+  const [dry, setDry] = useState(() => new URLSearchParams(location.search).get('dry') === '1')
   const [state, setState] = useState<'idle' | 'armed' | 'sending' | 'sent' | 'error'>('idle')
   const [err, setErr] = useState('')
   const oneOff = !!run.ablate?.one

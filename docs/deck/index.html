@@ -6,7 +6,7 @@
 <title>WRAITH — pitch deck</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet" />
 <style>
   :root {
     --void: #06050a; --bone: #ece7f6; --ash: #9a93ad; --fog: #5f5873;
@@ -164,6 +164,54 @@
   #progress { position: fixed; left: 0; bottom: 0; height: 4px; background: linear-gradient(90deg, var(--v), var(--t)); transition: width .5s ease; z-index: 10; box-shadow: 0 0 20px var(--v); }
   #hint { position: fixed; right: 18px; top: 14px; font: 12px "JetBrains Mono", monospace; color: #5f5873; z-index: 10; }
 </style>
+
+<style id="paper">
+  /* Paper skin: the deck now matches the product (instinct-style minimalism). */
+  :root { --void:#ffffff; --bone:#161615; --ash:#5e5d59; --fog:#9a9893; --v:#8a6f4d; --t:#2d6a4a; --r:#b23a1e; --a:#a2650d; --g:#2d6a4a; --b:#2b4e86; --o:#c25a1c; --p:#a33a6b; }
+  html, body { background:#fff; font-family: Geist, Inter, system-ui, sans-serif; color:#161615; }
+  .slide { background:#fff; }
+  .slide::before, .slide::after { display:none; }
+  h1, h2 { font-family: Newsreader, Georgia, serif !important; font-weight: 400 !important; letter-spacing: -0.01em !important; text-shadow:none !important; text-transform:none; }
+  h2 { font-size: 76px; }
+  .kicker { font-family: Geist, sans-serif; letter-spacing: 0.02em; text-transform:none; font-size: 22px; color:#9a9893; }
+  .mono { font-family: "Geist Mono", monospace; }
+  p.lede { color:#5e5d59; font-family: Newsreader, Georgia, serif; }
+  .panel { background:#fff; border:1px solid #ebe8e2; border-radius:14px; box-shadow:none; }
+  .brand { font-family: Newsreader, Georgia, serif; font-weight:400; letter-spacing:0; color:#9a9893; font-size:22px; }
+  .num { color:#b5b2ab; font-family: Geist, sans-serif; letter-spacing:.05em; }
+  .chip { border-color:#ebe8e2; background:#fff; color:#161615; font-family: Geist, sans-serif; }
+  .ring, .ring2 { display:none; }
+  .ghost { font-size:0; right:300px; top:300px; filter:none; animation:none; }
+  .ghost::before { content:""; display:block; width:300px; height:300px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 27.5V14a8 8 0 0 1 16 0v13.5l-2.6-1.9-2.7 2-2.7-2-2.7 2-2.7-2z' fill='none' stroke='%23161615' stroke-width='1' stroke-linejoin='round'/%3E%3Ccircle cx='13' cy='14.2' r='0.9' fill='%23161615'/%3E%3Ccircle cx='19' cy='14.2' r='0.9' fill='%23161615'/%3E%3C/svg%3E") no-repeat center/contain; }
+  .title { font-family: Newsreader, Georgia, serif !important; font-weight:300 !important; letter-spacing:-0.02em !important; font-size:210px; margin-top:120px; }
+  .title span { text-shadow:none !important; }
+  .active .title span { animation-name: letterPaper; }
+  @keyframes letterPaper { to { opacity:1; filter:none; transform:none; } }
+  .stat .big, .kpi .big { font-family: Newsreader, Georgia, serif; font-weight:300; }
+  .glitch { animation:none; }
+  .code { color:#6b5a43; background:#faf9f7; }
+  .code .s { color:#2d6a4a } .code .n { color:#a2650d } .code .p { color:#b7b4ad }
+  .comp .t { font-family: Geist, sans-serif; letter-spacing:.02em; text-transform:none; color:#9a9893; }
+  .node { background:#fff !important; }
+  .node .h { font-family: Newsreader, Georgia, serif; font-weight:400; font-size:30px; }
+  svg .draw { stroke:#161615; opacity:.35; }
+  .packet { background:#b23a1e !important; box-shadow:none !important; }
+  .agent .n, .face .pn, .use .h { font-family: Newsreader, Georgia, serif; font-weight:400; }
+  .blind { color:#b5b2ab; background:#faf9f7; }
+  .shot { border:1px solid #ebe8e2; box-shadow:0 30px 80px -50px rgba(0,0,0,.35); background:#fff; }
+  .shot .cap { background:#fff; color:#161615 !important; border:1px solid #ebe8e2; font-family: Newsreader, Georgia, serif; font-style:italic; font-size:22px; }
+  .scan { display:none; }
+  .beat { background:#fff; border-color:#ebe8e2; font-family: Geist, sans-serif; }
+  .beat b { color:#8a6f4d; }
+  .tick .act { font-family: Newsreader, Georgia, serif; font-weight:400; font-style:italic; }
+  .bar .fill { background:#d9d2c5; }
+  .bar.win .fill { background:#161615; box-shadow:none; }
+  .bar .sc { color:#9a9893; font-family: Geist, sans-serif; }
+  .cta div[style*="Cinzel"] { font-family: Newsreader, Georgia, serif !important; font-weight:400 !important; letter-spacing:0 !important; text-shadow:none !important; }
+  #progress { background:#161615; box-shadow:none; }
+  .hl { background-image: linear-gradient(transparent 62%, #efe6d8 62%); }
+</style>
 </head>
 <body>
 <div id="stage">
@@ -174,12 +222,12 @@
   <div class="ring2"></div>
   <div class="ghost">👻</div>
   <div class="kicker r d1">Hack with YOU · Halloween Edition · AWS Builder Loft</div>
-  <h1 class="title" id="wtitle">WRAITH</h1>
+  <h1 class="title" id="wtitle">Wraith</h1>
   <p class="lede r d8" style="font-size:40px;color:var(--bone);margin-top:10px">The war room that builds itself.</p>
   <p class="lede r d9" style="max-width:1000px">A CrewAI swarm with partial knowledge reads any incident — haunted or real — and Parasail streams a bespoke, operable command station into existence, component by component. One button and the room's Discord lights up.</p>
   <div class="chips">
     <div class="chip r d10"><span class="dot" style="background:var(--o)"></span>CrewAI Flow + swarm</div>
-    <div class="chip r d10"><span class="dot" style="background:var(--v)"></span>Parasail streaming · json_schema · BGE-M3</div>
+    <div class="chip r d10"><span class="dot" style="background:#8a6f4d"></span>Parasail streaming · json_schema · BGE-M3</div>
     <div class="chip r d11"><span class="dot" style="background:var(--b)"></span>You.com search + contents</div>
     <div class="chip r d11"><span class="dot" style="background:var(--g)"></span>One → Discord</div>
   </div>
@@ -196,25 +244,25 @@
     <div class="panel stat r d6"><div class="big" style="color:var(--a)">3 AM</div><div class="lbl">when the on-call human has to stitch sensors, rumours and runbooks together alone</div></div>
     <div class="panel stat r d7"><div class="big" style="color:var(--t)">1 tool</div><div class="lbl">should read the incident, verify it against the live web, decide — and act</div></div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">02 / 10</div>
+  <div class="brand">Wraith</div><div class="num">02 / 10</div>
 </section>
 
 <!-- 3 · INSIGHT -->
 <section class="slide" data-n="3">
   <div class="kicker r d1">The insight</div>
-  <h2 class="r d2" style="font-size:62px">Don't build a dashboard. <span style="color:var(--v)">Compile one.</span></h2>
+  <h2 class="r d2" style="font-size:62px">Don't build a dashboard. <span style="color:#8a6f4d">Compile one.</span></h2>
   <div class="split">
     <div class="panel code caret r d3" id="jsonstream"></div>
     <div class="comps" id="compgrid">
-      <div class="panel comp" style="grid-column:span 2;border-color:rgba(251,113,133,.5)"><div class="t">ThreatHeader · router</div><div class="v" style="color:var(--r);font-family:Cinzel,serif;font-size:34px">Level-5 phantom breach in catering coffee bar</div></div>
+      <div class="panel comp" style="grid-column:span 2;border-color:#e3ded4"><div class="t">ThreatHeader · router</div><div class="v" style="color:var(--r);font-family:Newsreader,Georgia,serif;font-size:34px">Level-5 phantom breach in catering coffee bar</div></div>
       <div class="panel comp"><div class="t">EMFRadar · sentinel</div><div class="v mono" style="color:var(--r);font-size:56px">98 mG</div></div>
-      <div class="panel comp"><div class="t">DecisionCard · commander</div><div class="v" style="color:var(--r);font-family:Cinzel,serif;font-size:44px">EVACUATE</div></div>
+      <div class="panel comp"><div class="t">DecisionCard · commander</div><div class="v" style="color:var(--r);font-family:Newsreader,Georgia,serif;font-size:44px">EVACUATE</div></div>
       <div class="panel comp"><div class="t">EvidenceRail · verifier</div><div class="v" style="font-size:21px;color:var(--g)">✓ outdoor weather mild (50–67°F): the −4°C is not weather<br/>✓ no grid outage at 525 Market St</div></div>
       <div class="panel comp"><div class="t">CountermeasureSelector · archivist</div><div class="v" style="font-size:22px">☑ spectral decoy · ☑ UV lantern array<br/>☐ banishment rite (after evacuation)</div></div>
-      <div class="panel comp" style="grid-column:span 2;border-color:rgba(74,222,128,.5)"><div class="t">DispatchConsole → One → #loft-incident</div><div class="v mono" style="font-size:20px;color:#d9f99d">team · [catering_coffee_bar] · EVACUATE · 4 civilians pinned in the contact zone · decoy + UV armed</div></div>
+      <div class="panel comp" style="grid-column:span 2;border-color:#e3ded4"><div class="t">DispatchConsole → One → #loft-incident</div><div class="v mono" style="font-size:20px;color:#2d6a4a">team · [catering_coffee_bar] · EVACUATE · 4 civilians pinned in the contact zone · decoy + UV armed</div></div>
     </div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">03 / 10</div>
+  <div class="brand">Wraith</div><div class="num">03 / 10</div>
 </section>
 
 <!-- 4 · PIPELINE -->
@@ -222,18 +270,18 @@
   <div class="kicker r d1">How it works</div>
   <h2 class="r d2" style="font-size:46px">Route → gather → deliberate → decide → compile → act</h2>
   <div class="pipe" style="top:300px">
-    <svg width="1680" height="520" style="position:absolute;inset:0"><path class="draw" d="M170 90 L 1510 90 C 1600 90, 1600 390, 1510 390 L 170 390" fill="none" stroke="#a78bfa" stroke-width="3" stroke-dasharray="10 8" opacity=".75"/></svg>
+    <svg width="1680" height="520" style="position:absolute;inset:0"><path class="draw" d="M170 90 L 1510 90 C 1600 90, 1600 390, 1510 390 L 170 390" fill="none" stroke="#8a6f4d" stroke-width="3" stroke-dasharray="10 8" opacity=".75"/></svg>
     <div class="packet" style="position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--t);box-shadow:0 0 34px var(--t);offset-path:path('M170 90 L 1510 90 C 1600 90, 1600 390, 1510 390 L 170 390')"></div>
-    <div class="panel node r d3" style="left:0px;top:0px;width:340px;min-height:180px;border-color:rgba(167,139,250,.6)"><div class="h">① Intake</div><div class="s">@start · Parasail gpt-oss<br/>json_schema Route</div></div>
-    <div class="panel node r d4" style="left:447px;top:0px;width:340px;min-height:180px;border-color:rgba(251,146,60,.6)"><div class="h">② @router</div><div class="s">haunting · real_world<br/>control → never escalates</div></div>
-    <div class="panel node r d5" style="left:893px;top:0px;width:340px;min-height:180px;border-color:rgba(96,165,250,.6)"><div class="h">③ Intel</div><div class="s">You.com search + contents<br/>BGE-M3 grimoire · oracle</div></div>
-    <div class="panel node r d6" style="left:1340px;top:0px;width:340px;min-height:180px;border-color:rgba(240,171,252,.6)"><div class="h">④ Swarm</div><div class="s">Sentinel · Archivist · Verifier<br/>partial knowledge, parallel</div></div>
-    <div class="panel node r d7" style="left:1340px;top:300px;width:340px;min-height:180px;border-color:rgba(251,191,36,.6)"><div class="h">⑤ Commander</div><div class="s">sees only the briefs<br/>contain · evacuate · observe</div></div>
-    <div class="panel node r d8" style="left:893px;top:300px;width:340px;min-height:180px;border-color:rgba(167,139,250,.6)"><div class="h">⑥ Compiler</div><div class="s">Parasail stream:true<br/>schema-locked manifest</div></div>
-    <div class="panel node r d9" style="left:447px;top:300px;width:340px;min-height:180px;border-color:rgba(94,234,212,.6)"><div class="h">⑦ Live station</div><div class="s">WebSocket → partial-JSON<br/>14 operable components</div></div>
-    <div class="panel node r d10" style="left:0px;top:300px;width:340px;min-height:180px;border-color:rgba(74,222,128,.6)"><div class="h">⑧ One → Discord</div><div class="s">list → find → execute<br/>payload from live state</div></div>
+    <div class="panel node r d3" style="left:0px;top:0px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">① Intake</div><div class="s">@start · Parasail gpt-oss<br/>json_schema Route</div></div>
+    <div class="panel node r d4" style="left:447px;top:0px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">② @router</div><div class="s">haunting · real_world<br/>control → never escalates</div></div>
+    <div class="panel node r d5" style="left:893px;top:0px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">③ Intel</div><div class="s">You.com search + contents<br/>BGE-M3 grimoire · oracle</div></div>
+    <div class="panel node r d6" style="left:1340px;top:0px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">④ Swarm</div><div class="s">Sentinel · Archivist · Verifier<br/>partial knowledge, parallel</div></div>
+    <div class="panel node r d7" style="left:1340px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑤ Commander</div><div class="s">sees only the briefs<br/>contain · evacuate · observe</div></div>
+    <div class="panel node r d8" style="left:893px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑥ Compiler</div><div class="s">Parasail stream:true<br/>schema-locked manifest</div></div>
+    <div class="panel node r d9" style="left:447px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑦ Live station</div><div class="s">WebSocket → partial-JSON<br/>14 operable components</div></div>
+    <div class="panel node r d10" style="left:0px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑧ One → Discord</div><div class="s">list → find → execute<br/>payload from live state</div></div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">04 / 10</div>
+  <div class="brand">Wraith</div><div class="num">04 / 10</div>
 </section>
 
 <!-- 5 · SWARM -->
@@ -242,12 +290,12 @@
   <h2 class="r d2">No agent sees everything.</h2>
   <p class="lede r d3">Each agent gets only its slice of the world — the way a real incident team works. The Commander never sees raw data, only the briefs, and has to resolve their disagreements.</p>
   <div class="agents">
-    <div class="panel agent r d4" style="border-color:rgba(125,211,252,.5)"><div class="n" style="color:#7dd3fc">◉ Sentinel</div><div class="k"><span style="background:rgba(125,211,252,.12);color:#7dd3fc">EMF · thermal · motion z-scores</span><span class="blind">sightings</span><span class="blind">lore</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Coffee bar reads 98 mG (z=11.5) and −4 °C (z=−10). Cold plus EMF, not motion alone — this is not a crowd.” → <b style="color:var(--a)">contain</b></p></div>
-    <div class="panel agent r d5" style="border-color:rgba(240,171,252,.5)"><div class="n" style="color:#f0abfc">✶ Archivist</div><div class="k"><span style="background:rgba(240,171,252,.12);color:#f0abfc">grimoire · BGE-M3 retrieval · oracle</span><span class="blind">raw sensors</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Level-5 phantom confirmed by EMF and cold; evacuate pinned civilians before banishment.” → <b style="color:var(--r)">evacuate</b></p></div>
-    <div class="panel agent r d6" style="border-color:rgba(134,239,172,.5)"><div class="n" style="color:#86efac">⌖ Verifier</div><div class="k"><span style="background:rgba(134,239,172,.12);color:#86efac">You.com highlights · page contents</span><span class="blind">sensors</span><span class="blind">lore</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Mild outdoor weather and no grid outage at the address: mundane causes don’t explain the readings.” → <b style="color:var(--g)">observe</b></p></div>
+    <div class="panel agent r d4" style="border-color:#e3ded4"><div class="n" style="color:#2b4e86">◉ Sentinel</div><div class="k"><span style="background:#f4efe6;color:#2b4e86">EMF · thermal · motion z-scores</span><span class="blind">sightings</span><span class="blind">lore</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Coffee bar reads 98 mG (z=11.5) and −4 °C (z=−10). Cold plus EMF, not motion alone — this is not a crowd.” → <b style="color:var(--a)">contain</b></p></div>
+    <div class="panel agent r d5" style="border-color:#e3ded4"><div class="n" style="color:#7a3e6e">✶ Archivist</div><div class="k"><span style="background:#f4efe6;color:#7a3e6e">grimoire · BGE-M3 retrieval · oracle</span><span class="blind">raw sensors</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Level-5 phantom confirmed by EMF and cold; evacuate pinned civilians before banishment.” → <b style="color:var(--r)">evacuate</b></p></div>
+    <div class="panel agent r d6" style="border-color:#e3ded4"><div class="n" style="color:#2d6a4a">⌖ Verifier</div><div class="k"><span style="background:#f4efe6;color:#2d6a4a">You.com highlights · page contents</span><span class="blind">sensors</span><span class="blind">lore</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Mild outdoor weather and no grid outage at the address: mundane causes don’t explain the readings.” → <b style="color:var(--g)">observe</b></p></div>
   </div>
   <div class="panel cmd r d8"><div style="font-size:36px;font-weight:800;color:var(--a)">♛ Commander → EVACUATE</div><div class="lede" style="font-size:22px;margin:10px 0 0;max-width:none">“Sentinel urged contain, Verifier urged observe. Civilian exposure and mobility break the tie toward evacuate.” <span class="mono" style="font-size:16px;color:var(--fog)">— real output, tick 142</span></div></div>
-  <div class="brand">WRAITH</div><div class="num">05 / 10</div>
+  <div class="brand">Wraith</div><div class="num">05 / 10</div>
 </section>
 
 <!-- 6 · ABLATION -->
@@ -255,12 +303,12 @@
   <div class="kicker r d1">Every partner is load-bearing</div>
   <h2 class="r d2">Switch one off — live. Watch it break.</h2>
   <div class="ab">
-    <div class="card r d3"><div class="flip" style="animation-delay:1.2s"><div class="panel face"><div class="pn" style="color:var(--v)">Parasail</div><div class="role">router · 4 agents · streaming compiler · BGE-M3 embeddings · model routing gpt-oss / DeepSeek</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--v);margin-top:10px">No Parasail</div><div class="what">No brain, no interface. The station never assembles.</div></div></div></div>
-    <div class="card r d4"><div class="flip" style="animation-delay:1.5s"><div class="panel face"><div class="pn" style="color:var(--o)">CrewAI</div><div class="role">Flow @start / @router / @listen · partial-knowledge agents · commander</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--o);margin-top:10px">No CrewAI</div><div class="what">One generic layout from raw text. No routing, no verification, no decision.</div></div></div></div>
-    <div class="card r d5"><div class="flip" style="animation-delay:1.8s"><div class="panel face"><div class="pn" style="color:var(--b)">You.com</div><div class="role">search with highlights + contents · every claim gets a clickable source</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--b);margin-top:10px">No You.com</div><div class="what">The evidence rail goes empty. Severity becomes “unverified”.</div></div></div></div>
-    <div class="card r d6"><div class="flip" style="animation-delay:2.1s"><div class="panel face"><div class="pn" style="color:var(--g)">One</div><div class="role">list_one_integrations → find_one_actions → execute_one_action · Discord</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--g);margin-top:10px">No One</div><div class="what">The station sees the threat — and can't act on it.</div></div></div></div>
+    <div class="card r d3"><div class="flip" style="animation-delay:1.2s"><div class="panel face"><div class="pn" style="color:#8a6f4d">Parasail</div><div class="role">router · 4 agents · streaming compiler · BGE-M3 embeddings · model routing gpt-oss / DeepSeek</div></div><div class="panel face back" style="border-color:#e3ded4"><div class="off">ABLATED</div><div class="pn" style="color:#8a6f4d;margin-top:10px">No Parasail</div><div class="what">No brain, no interface. The station never assembles.</div></div></div></div>
+    <div class="card r d4"><div class="flip" style="animation-delay:1.5s"><div class="panel face"><div class="pn" style="color:var(--o)">CrewAI</div><div class="role">Flow @start / @router / @listen · partial-knowledge agents · commander</div></div><div class="panel face back" style="border-color:#e3ded4"><div class="off">ABLATED</div><div class="pn" style="color:var(--o);margin-top:10px">No CrewAI</div><div class="what">One generic layout from raw text. No routing, no verification, no decision.</div></div></div></div>
+    <div class="card r d5"><div class="flip" style="animation-delay:1.8s"><div class="panel face"><div class="pn" style="color:var(--b)">You.com</div><div class="role">search with highlights + contents · every claim gets a clickable source</div></div><div class="panel face back" style="border-color:#e3ded4"><div class="off">ABLATED</div><div class="pn" style="color:var(--b);margin-top:10px">No You.com</div><div class="what">The evidence rail goes empty. Severity becomes “unverified”.</div></div></div></div>
+    <div class="card r d6"><div class="flip" style="animation-delay:2.1s"><div class="panel face"><div class="pn" style="color:var(--g)">One</div><div class="role">list_one_integrations → find_one_actions → execute_one_action · Discord</div></div><div class="panel face back" style="border-color:#e3ded4"><div class="off">ABLATED</div><div class="pn" style="color:var(--g);margin-top:10px">No One</div><div class="what">The station sees the threat — and can't act on it.</div></div></div></div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">06 / 10</div>
+  <div class="brand">Wraith</div><div class="num">06 / 10</div>
 </section>
 
 <!-- 7 · DEMO -->
@@ -278,7 +326,7 @@
     <div class="beat r d9"><b>04</b> operator arms countermeasures</div>
     <div class="beat r d10"><b>05</b> DISPATCH → the room's Discord pings</div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">07 / 10</div>
+  <div class="brand">Wraith</div><div class="num">07 / 10</div>
 </section>
 
 <!-- 8 · TRACK 1 -->
@@ -291,11 +339,11 @@
     <div class="panel tick r d5"><div class="id">tick 900 · control-tick</div><div class="act" style="color:var(--g)">OBSERVE</div><div class="why">41 motion events, EMF 3, 21°C — a human crowd</div><div class="ok" id="t900">✓ “crowd, not entity” · held, 0.97</div></div>
   </div>
   <div class="kpis">
-    <div class="panel kpi r d6"><div class="lbl">practice ticks correct</div><div class="big" style="color:var(--v)">3 / 3</div></div>
+    <div class="panel kpi r d6"><div class="lbl">practice ticks correct</div><div class="big" style="color:#8a6f4d">3 / 3</div></div>
     <div class="panel kpi r d7"><div class="lbl">false alarms</div><div class="big" style="color:var(--g)">0</div></div>
     <div class="panel kpi r d8"><div class="lbl">seconds per tick, end to end</div><div class="big" style="color:var(--b)">~12</div></div>
   </div>
-  <div class="brand">WRAITH</div><div class="num">08 / 10</div>
+  <div class="brand">Wraith</div><div class="num">08 / 10</div>
 </section>
 
 <!-- 9 · IMPACT -->
@@ -308,21 +356,21 @@
     <div class="panel use r d5"><div class="e">🔥</div><div class="h">Emergency ops</div><div class="s">Asked about wildfire smoke, it checked the live web: “AQI is 20–52 today; smoke reports are from 2023.” → observe. Grounding changes the decision.</div></div>
   </div>
   <p class="lede r d7" style="font-size:28px">Any incident in plain English → a bespoke, cited, operable station in seconds. Open source, one command to run, works offline from recordings.</p>
-  <div class="brand">WRAITH</div><div class="num">09 / 10</div>
+  <div class="brand">Wraith</div><div class="num">09 / 10</div>
 </section>
 
 <!-- 10 · CLOSE -->
 <section class="slide" data-n="10">
   <div class="kicker r d1">Why this idea</div>
   <h2 class="r d2" style="font-size:64px">100 AI judges. 100 first-place votes.</h2>
-  <p class="lede r d3" style="font-size:24px;max-width:1150px">Before writing a line of code we ran a red team of 100 persona judges (sponsor engineers, VCs, UX leads, skeptics, the auto-reviewer) over 10 ideas on the official rubric. Borda score:</p>
+  <p class="lede r d3" style="font-size:24px;max-width:1150px">Before writing a line of code, 100 persona judges (sponsor engineers, VCs, UX leads, skeptics, the auto-reviewer) scored 10 ideas on the official rubric. Then two more rounds of 100 agents red-teamed the product itself. Borda score:</p>
   <div class="bars" id="bars"></div>
   <div class="panel cta r d10">
     <div class="kicker" style="font-size:16px">Try it</div>
     <div class="mono" style="font-size:26px;margin-top:16px;color:var(--bone)">github.com/vnmoorthy/wraith</div>
-    <div class="mono" style="font-size:22px;margin-top:20px;color:#d9f99d">$ ./run.sh</div>
+    <div class="mono" style="font-size:22px;margin-top:20px;color:#2d6a4a">$ ./run.sh</div>
     <p class="lede" style="font-size:22px;margin-top:20px">CrewAI · Parasail · You.com · One<br/>MIT licensed.</p>
-    <div style="font-family:Cinzel,serif;font-weight:900;font-size:56px;letter-spacing:.2em;margin-top:30px;text-shadow:0 0 40px rgba(167,139,250,.6)">WRAITH</div>
+    <div style="font-family:Newsreader,Georgia,serif;font-weight:900;font-size:56px;letter-spacing:.2em;margin-top:30px;text-shadow:0 0 40px rgba(167,139,250,.6)">WRAITH</div>
   </div>
   <div class="num">10 / 10</div>
 </section>
@@ -352,7 +400,7 @@
 
   // ranking bars (from the 100-judge red team)
   const board = [['WRAITH — the self-building war room', 1000, 1], ['Hallucination Exorcist', 852], ['Graveyard Shift (SRE swarm)', 703], ['Séance (generative UI for the web)', 660], ['Poltergeist (red-team arena)', 630], ['3D digital twin', 566], ['Necropolis (zombie-code)', 449], ['Banshee (disaster early warning)', 289], ['Haunted Mansion (Discord game)', 195], ['Frankenstein (agent builder)', 156]]
-  document.getElementById('bars').innerHTML = board.map(([n, v, w], k) => `<div class="bar ${w ? 'win' : ''} r" style="animation-delay:${0.5 + k * 0.08}s"><span style="${w ? 'color:#5eead4;font-weight:800' : 'color:#9a93ad'}">${n}</span><div class="track"><div class="fill" style="--w:${v / 10}%;animation-delay:${0.8 + k * 0.08}s"></div></div><span class="sc">${v}</span></div>`).join('')
+  document.getElementById('bars').innerHTML = board.map(([n, v, w], k) => `<div class="bar ${w ? 'win' : ''} r" style="animation-delay:${0.5 + k * 0.08}s"><span style="${w ? 'color:#2d6a4a;font-weight:800' : 'color:#9a93ad'}">${n}</span><div class="track"><div class="fill" style="--w:${v / 10}%;animation-delay:${0.8 + k * 0.08}s"></div></div><span class="sc">${v}</span></div>`).join('')
 
   // JSON stream for slide 3
   const json = `{

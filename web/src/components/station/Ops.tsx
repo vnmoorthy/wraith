@@ -45,7 +45,7 @@ export function CountermeasureSelector({ spec, building }: { spec: ComponentSpec
                 <div className="flex items-center gap-2">
                   <span className={clsx('flex h-4 w-4 items-center justify-center rounded border', on ? 'border-[var(--ok)] bg-[var(--ok)] text-white' : 'border-[var(--hair-2)]')}>{on && <Check size={11} strokeWidth={3} />}</span>
                   <span className="text-sm font-semibold text-bone">{o.label || o.id}</span>
-                  {o.recommended && <span className="rounded bg-[var(--beige)] px-1.5 py-0.5 font-mono text-[9px] uppercase text-[var(--accent)]">recommended</span>}
+                  {o.recommended && <span className="serif text-[12.5px] italic text-[var(--beige-ink)]">recommended</span>}
                 </div>
                 <span className="font-mono text-xs text-ash">{Math.round((Number(o.efficacy) || 0) * 100)}%</span>
               </div>
@@ -82,13 +82,13 @@ export function CivilianTracker({ spec, building }: { spec: ComponentSpec; build
         {groups.map((g, i) => {
           const s = statusOf(g)
           return (
-            <div key={i} className="flex items-center justify-between gap-2 rounded-lg border border-[var(--hair)] bg-[var(--sunk)] px-3 py-2">
+            <div key={i} className="flex items-center justify-between gap-2 border-t border-[var(--hair)] py-2.5">
               <div className="min-w-0">
                 <div className="truncate text-sm text-bone">{g.count} · {g.label}</div>
                 <div className="font-mono text-[10px] text-ash">{fmtSector(g.sector)}</div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-bold uppercase" style={{ color: color(s) }}>{s}</span>
+                <span className="serif text-[13.5px] italic" style={{ color: color(s) }}>{s}</span>
                 {s !== 'safe' && (
                   <button onClick={() => setOp((o) => ({ ...o, civilianOverrides: { ...o.civilianOverrides, [g.sector]: CIV_FLOW[s] || 'safe' } }))}
                     className="rounded-md border border-[var(--hair-2)] px-2 py-1 font-mono text-[10px] text-bone hover:border-[var(--accent)] hover:text-[var(--accent)]">
@@ -129,16 +129,16 @@ export function EvidenceRail({ spec, building }: { spec: ComponentSpec; building
           const Icon = v.icon
           const ev = (c.evidence_ids || []).map((id: number) => run.evidence.find((e) => e.id === id)).filter(Boolean)
           return (
-            <div key={i} className="rounded-xl border border-[var(--hair)] bg-[var(--sunk)] p-3">
+            <div key={i} className="border-t border-[var(--hair)] py-3">
               <div className="flex items-start gap-2">
                 <Icon size={16} style={{ color: v.color }} className="mt-0.5 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <div className="text-[13px] leading-snug text-bone">{c.claim}</div>
-                  <div className="mt-0.5 font-mono text-[10px] font-bold uppercase" style={{ color: v.color }}>{c.verdict}</div>
+                  <div className="serif mt-0.5 text-[13px] italic" style={{ color: v.color }}>{c.verdict}</div>
                 </div>
               </div>
               {ev.map((e: any) => (
-                <a key={e.id} href={e.url} target="_blank" rel="noreferrer" className="mt-2 block rounded-lg border border-[var(--hair)] bg-[var(--sunk)] p-2 transition hover:border-[var(--hair-2)]">
+                <a key={e.id} href={e.url} target="_blank" rel="noreferrer" className="mt-2 block border-l border-[var(--hair-2)] pl-3 transition hover:border-[var(--ink)]">
                   <div className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--info)]">
                     <span className="rounded bg-[var(--sunk)] px-1">[{e.id}]</span>{host(e.url)}<ExternalLink size={10} />
                     {e.page_age && <span className="ml-auto text-fog">{String(e.page_age).slice(0, 10)}</span>}
@@ -165,7 +165,7 @@ export function GrimoireHits({ spec, building }: { spec: ComponentSpec; building
       <div className="mb-3 font-mono text-[10px] text-ash">retrieved by <span className="text-[#6d4fc2]">Parasail BGE-M3</span> embeddings · cosine similarity</div>
       <div className="flex flex-col gap-2">
         {shown.map((h) => (
-          <div key={h.id} className="rounded-xl border border-[var(--hair)] bg-[var(--sunk)] p-3">
+          <div key={h.id} className="border-t border-[var(--hair)] py-3">
             <div className="flex items-center justify-between gap-2">
               <span className="text-sm font-semibold text-bone">{h.title}</span>
               <span className="rounded bg-black/[0.04] px-1.5 font-mono text-[9px] uppercase text-ash">{h.kind}</span>
@@ -198,7 +198,7 @@ export function ProtocolChecklist({ spec, building }: { spec: ComponentSpec; bui
                 <span className="min-w-0 flex-1">
                   <span className={clsx('text-[13px] text-bone', on && 'line-through')}>{s.label}</span>
                   <span className="ml-2 font-mono text-[10px] text-ash">{s.owner}</span>
-                  {s.critical && <span className="ml-2 font-mono text-[9px] uppercase text-[var(--danger)]">critical</span>}
+                  {s.critical && <span className="serif ml-2 text-[12.5px] italic text-[var(--danger)]">critical</span>}
                 </span>
               </button>
             </li>

@@ -18,19 +18,23 @@ export default function App() {
   const [autoRun, setAutoRun] = useState<RunState>(emptyRun())
   const [auto, setAuto] = useState<AutoState>({ running: false, practice: true, rows: [] })
   const [op, setOpState] = useState<OperatorState>(emptyOp())
-  const [xray, setXray] = useState(true)
+  const [xray, setXray] = useState(() => new URLSearchParams(location.search).get('xray') === '1')
   const [provenance, setProvenance] = useState(false)
   const [ablate, setAblate] = useState<Record<string, boolean>>({})
   const [health, setHealth] = useState<any>(null)
   const [status, setStatus] = useState<any>(null)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
+  const film = new URLSearchParams(location.search).get('film') === '1'
+  if (film) document.documentElement.style.zoom = '1.25'
   const mode = useRef<'warroom' | 'autopilot'>('warroom')
   const timers = useRef<number[]>([])
+  const ignored = useRef<Set<string>>(new Set())
 
   const setOp = useCallback((fn: (o: OperatorState) => OperatorState) => setOpState((o) => fn(o)), [])
 
   const onEvent = useCallback((e: WraithEvent) => {
+    if (e.run_id && ignored.current.has(e.run_id)) return
     if (e.type === 'busy') { setNotice(e.error); setTimeout(() => setNotice(''), 3000); return }
     if (e.type === 'pong') return
     if (e.type.startsWith('autopilot.')) {
@@ -104,6 +108,13 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Once an incident is summoned the station takes the whole room; the intake comes back with "New incident".
+  const focus = run.phase !== 'idle'
+  const newIncident = () => {
+    if (run.runId && run.phase !== 'done') ignored.current.add(run.runId)
+    stopReplay(); setBusy(false); setRun(emptyRun()); setOpState(emptyOp())
+  }
+
   const toggleAblate = (p: string) => setAblate((a) => ({ ...a, [p]: !a[p] }))
   const anyOff = Object.values(ablate).some(Boolean)
 
@@ -127,16 +138,22 @@ export default function App() {
       <main className="relative z-10 min-h-0 flex-1 p-4">
         {view === 'warroom' && (
           <StationProvider run={run} op={op} setOp={setOp} xray={xray} provenance={provenance} summon={summon}>
-            <div className={clsx('grid h-full min-h-0 gap-4', xray ? 'grid-cols-[300px_minmax(0,1fr)_340px]' : 'grid-cols-[300px_minmax(0,1fr)]')}>
-              <aside className="flex min-h-0 min-w-0 flex-col gap-4 overflow-auto pb-2">
+            <div className={clsx('grid h-full min-h-0 gap-6', film || focus ? (xray && !film ? 'grid-cols-[minmax(0,1fr)_360px]' : 'grid-cols-[minmax(0,1fr)]') : xray ? 'grid-cols-[300px_minmax(0,1fr)_340px]' : 'grid-cols-[300px_minmax(0,1fr)]')}>
+              <aside className={clsx('flex min-h-0 min-w-0 flex-col gap-4 overflow-auto pb-2', (film || focus) && 'hidden')}>
                 <Intake onSummon={summon} busy={busy} />
                 <SwarmPanel run={run} />
               </aside>
               <section className="flex min-h-0 min-w-0 flex-col gap-3">
-                <div className="min-h-0 flex-1 overflow-auto pr-1"><Station /></div>
-                <div className="panel shrink-0 px-2 py-1"><Timeline run={run} /></div>
+                {focus && !film && (
+                  <div className="mx-auto flex w-full max-w-[1280px] items-baseline justify-between text-[13px]">
+                    <button onClick={newIncident} className="text-ash hover:text-bone">← New incident</button>
+                    {run.replay && <span className="serif italic text-fog">replaying a recorded run</span>}
+                  </div>
+                )}
+                <div className={clsx('min-h-0 flex-1 overflow-auto pr-1', (film || focus) && 'mx-auto w-full max-w-[1280px]')}><Station /></div>
+                {!film && <div className="shrink-0 border-t border-[var(--hair)] px-1 pt-1"><Timeline run={run} /></div>}
               </section>
-              {xray && <aside className="min-h-0"><XRay run={run} /></aside>}
+              {xray && !film && <aside className="min-h-0"><XRay run={run} /></aside>}
             </div>
           </StationProvider>
         )}

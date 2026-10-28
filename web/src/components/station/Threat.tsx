@@ -8,7 +8,7 @@ export function ThreatHeader({ spec, building }: { spec: ComponentSpec; building
   const level = Math.max(1, Math.min(5, Number(p.threat_level) || 1))
   const hot = level >= 4
   return (
-    <Frame spec={spec} building={building} span={2} className={clsx(hot && 'ring-1 ring-[var(--danger)]/40')}>
+    <Frame spec={spec} building={building} span={2} >
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -103,12 +103,12 @@ export function StatGrid({ spec, building }: { spec: ComponentSpec; building?: b
   const stats: any[] = spec.props?.stats || []
   return (
     <Frame spec={spec} building={building}>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
         {stats.map((s, i) => (
-          <div key={i} className="rounded-xl border border-[var(--hair)] bg-[var(--sunk)] p-3">
-            <div className="panel-title truncate">{s.label}</div>
-            <div className="mt-1 font-mono text-2xl font-bold tabular-nums" style={{ color: toneColor(s.tone) }}>
-              {s.value}<span className="ml-1 text-xs font-normal text-ash">{s.unit}</span>
+          <div key={i} className="border-t border-[var(--hair)] pt-2">
+            <div className="truncate text-[12.5px] text-ash">{s.label}</div>
+            <div className="serif mt-0.5 text-[34px] font-light leading-tight tabular-nums" style={{ color: toneColor(s.tone) }}>
+              {s.value}<span className="ml-1 font-sans text-[13px] font-normal text-fog">{s.unit}</span>
             </div>
           </div>
         ))}

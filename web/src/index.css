@@ -120,3 +120,11 @@ body {
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 textarea, input { font-family: inherit; }
+
+/* Verdict beats: each line arrives on its own count. */
+.beat { opacity: 0; animation: beat 600ms cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes beat { from { opacity: 0; transform: translateY(6px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+/* A pen stroke drawn through an overruled answer. */
+.strike { position: relative; }
+.strike::after { content: ""; position: absolute; left: -2%; top: 55%; height: 2px; width: 0; background: var(--ink); animation: strike 420ms cubic-bezier(.4,.1,.2,1) forwards 250ms; }
+@keyframes strike { to { width: 104%; } }

@@ -58,6 +58,12 @@ async def _warm():
         await grimoire.search("warm up", k=1)
     except Exception as exc:  # noqa: BLE001
         print(f"[wraith] grimoire not built yet: {exc}")
+    try:  # CrewAI builds its Flow graph and agent executors lazily; pay that once now, not on stage
+        from .swarm import WraithFlow, _agent
+        WraithFlow()
+        _agent("Sentinel", "warm", "warm", config.MODEL_SWARM)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[wraith] crewai warm-up skipped: {exc}")
     models = {config.MODEL_ROUTER, config.MODEL_SWARM, config.MODEL_VERIFIER, config.MODEL_COMMANDER, config.MODEL_COMPILER}
     await asyncio.gather(*(parasail.chat([{"role": "user", "content": "ok"}], model=m, max_tokens=4) for m in models),
                          scenario.oracle("ping"), return_exceptions=True)
@@ -108,8 +114,19 @@ async def health(fresh: bool = False):
         import crewai
         return f"crewai {crewai.__version__}"
 
+    async def d():
+        conns = await one.list_integrations()
+        if not any(c["platform"] == "discord" for c in conns):
+            raise RuntimeError("no Discord connection in One: connect it at app.withone.ai, or Dispatch will stay pending")
+        return "Discord connected"
+
+    async def t():
+        if not config.TEAM_HANDLE:
+            raise RuntimeError("TEAM_HANDLE is not set: Autopilot live mode needs it")
+        return config.TEAM_HANDLE
+
     results = await asyncio.gather(check("parasail", p()), check("youcom", y()), check("one", o()),
-                                   check("scenario", s()), check("crewai", c()))
+                                   check("scenario", s()), check("crewai", c()), check("discord", d()), check("team", t()))
     data = dict(results)
     _health_cache.update(t=time.time(), data=data)
     return data
@@ -139,26 +156,27 @@ class DispatchBody(BaseModel):
 
 
 def build_dispatch(b: DispatchBody) -> str:
-    team = config.TEAM_HANDLE or "team-??"
-    lines = [f"{team} · [{b.sector}] · {b.action.upper()} · {b.rationale}".strip()]
+    """The alert a person would write, rebuilt from what the operator did on the station."""
+    sector = b.sector.replace("_", " ").title()
+    team = f" ({config.TEAM_HANDLE})" if config.TEAM_HANDLE else ""
+    lines = [f"**{b.action.upper()}** — {sector}{team}"]
+    if b.rationale:
+        lines.append(b.rationale)
     facts = []
-    if b.countermeasures:
-        facts.append("deploying " + ", ".join(b.countermeasures))
     if b.civilians:
-        facts.append("civilians: " + b.civilians)
+        facts.append(f"Civilians: {b.civilians}")
+    if b.countermeasures:
+        facts.append("Deploying " + ", ".join(c.replace("_", " ") for c in b.countermeasures))
     if b.isolated_zones:
-        facts.append("isolated: " + ", ".join(b.isolated_zones))
-    if b.confidence is not None:
-        facts.append(f"confidence {round(b.confidence * 100)}%")
-    if b.threat_level:
-        facts.append(f"threat {b.threat_level}/5")
+        facts.append("Isolated: " + ", ".join(z.replace("_", " ") for z in b.isolated_zones))
     if b.checklist:
-        facts.append("protocol " + b.checklist)
-    if facts:
-        lines.append(" · ".join(facts))
+        facts.append("Protocol " + b.checklist)
+    if b.confidence is not None:
+        facts.append(f"Confidence {round(b.confidence * 100)}%" + (f", threat {b.threat_level}/5" if b.threat_level else ""))
+    lines += facts
     if b.citations:
-        lines.append("evidence: " + " ".join(f"<{u}>" for u in b.citations[:2]))
-    lines.append(f"— WRAITH {b.urgency.upper()} · run {b.run_id or 'manual'} · CrewAI swarm on Parasail, grounded by You.com, sent by One")
+        lines.append("Sources: " + " ".join(f"<{u}>" for u in b.citations[:2]))
+    lines.append(f"— Wraith · {b.urgency} · checked against the live web by You.com, sent by One")
     return "\n".join(lines)[:1900]
 
 

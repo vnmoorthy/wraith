@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { parse, Allow } from 'partial-json'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { RunState } from '../../lib/run'
 import { SOURCE_COLORS } from '../../lib/station'
 import type { AgentKey } from '../../lib/types'
@@ -41,9 +41,19 @@ export function resolution(run: RunState): string {
   votes.forEach((v) => { tally[v] = (tally[v] || 0) + 1 })
   const top = Object.entries(tally).sort((a, b) => b[1] - a[1])
   if (top.length === 1) return top[0][0] === d.action ? `Unanimous — all ${votes.length} agents said ${top[0][0]}.` : `Overruled a unanimous ${top[0][0]}.`
-  if (top.length === votes.length && votes.length === 3) return `Three agents, three answers — the commander broke the tie.`
+  if (top.length === votes.length && votes.length === 3) return `Three agents. Three answers. The commander broke the tie.`
   if (top[0][0] === d.action) return `Sided with the ${top[0][1]}–${votes.length - top[0][1]} majority.`
   return `Overruled the ${top[0][1]}–${votes.length - top[0][1]} majority.`
+}
+
+function suspense(run: RunState): string {
+  const votes = SCOUTS.map((s) => partialBrief(run, s.key).recommends).filter(Boolean) as string[]
+  const uniq = Array.from(new Set(votes))
+  if (votes.length < 2) return 'weighing the briefs under doctrine…'
+  if (uniq.length === 1) return `All ${votes.length} say ${uniq[0]}. The commander checks the doctrine…`
+  if (uniq.length === votes.length) return `Split ${votes.length} ways — ${uniq.join(', ')}. The commander has to choose…`
+  const top = uniq.map((u) => [u, votes.filter((v) => v === u).length] as const).sort((a, b) => b[1] - a[1])
+  return `${top[0][1]} say ${top[0][0]}, ${votes.length - top[0][1]} disagree${votes.length - top[0][1] === 1 ? 's' : ''}. The commander has to choose…`
 }
 
 function useClock(run: RunState) {
@@ -62,19 +72,50 @@ function Counterfactual({ run, compact }: { run: RunState; compact?: boolean }) 
   const d = run.decision
   const alt = run.counterfactual
   if (!d || !alt?.action) return null
-  const changed = alt.action !== d.action
+  const pct = (x?: number) => (typeof x === 'number' ? `${Math.round(x * 100)}%` : '')
+  if (alt.action !== d.action) {
+    return (
+      <span className={clsx('serif text-ash', compact ? 'text-[13.5px]' : 'text-[16px]')}>
+        Without the live web: <span className="line-through decoration-[var(--ink)]">{alt.action}</span> ({pct(alt.confidence)}). <span className="hl text-bone">You.com changed the decision.</span>
+      </span>
+    )
+  }
+  const delta = (d.confidence ?? 0) - (alt.confidence ?? 0)
   return (
-    <div className={clsx('serif text-ash', compact ? 'text-[13.5px]' : 'text-[16px]')}>
-      Without the live web, the commander would have said{' '}
-      <span style={{ color: ACTION_COLOR[alt.action] }}>{alt.action}</span>
-      {typeof alt.confidence === 'number' && <> ({Math.round(alt.confidence * 100)}%)</>}.{' '}
-      {changed ? <span className="hl text-bone">You.com changed the decision.</span> : <span>You.com {d.confidence > (alt.confidence ?? 0) ? 'raised its confidence' : 'confirmed it'}.</span>}
+    <span className={clsx('serif text-ash', compact ? 'text-[13.5px]' : 'text-[16px]')}>
+      Without the live web it would also say {alt.action}, at {pct(alt.confidence)}.{' '}
+      {Math.abs(delta) < 0.03 ? 'The web agreed.' : delta > 0 ? `The web raised confidence to ${pct(d.confidence)}.` : `The web couldn’t confirm everything, so it held at ${pct(d.confidence)}.`}
+    </span>
+  )
+}
+
+/** When the live web flips the call, show both verdicts side by side. */
+function Fork({ run }: { run: RunState }) {
+  const d = run.decision!
+  const alt = run.counterfactual!
+  return (
+    <div className="mt-2 grid grid-cols-2 gap-10">
+      <div className="beat" style={{ animationDelay: '0ms' }}>
+        <div className="text-[13px] text-fog">Without the live web</div>
+        <div className="serif mt-1 text-[56px] italic leading-none text-fog"><span className="strike">{cap(alt.action)}.</span></div>
+        <div className="mt-2 text-[13px] text-fog">{typeof alt.confidence === 'number' && `${Math.round(alt.confidence * 100)}% · `}{alt.rationale}</div>
+      </div>
+      <div className="beat" style={{ animationDelay: '700ms' }}>
+        <div className="text-[13px] text-ash">With You.com</div>
+        <div className="serif mt-1 text-[76px] italic leading-none" style={{ color: ACTION_COLOR[d.action] }}><span className="hl hl-anim">{cap(d.action)}.</span></div>
+        <div className="mt-2 text-[13px] text-ash">{Math.round(d.confidence * 100)}% confidence · threat {d.threat_level}/5</div>
+      </div>
     </div>
   )
 }
 
-export function IncidentSheet({ run }: { run: RunState }) {
+export function IncidentSheet({ run, written = 0, failed }: { run: RunState; written?: number; failed?: string }) {
   const t = useClock(run)
+  const verdictRef = useRef<HTMLDivElement>(null)
+  // When the verdict lands, make sure the whole decision is on screen, whatever the projector size.
+  useEffect(() => {
+    if (run.decision) verdictRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [run.decision])
   const route = run.route
   const d = run.decision
   const incident = run.incident?.raw_incident_stream || run.incident?.text || (run.incident?.sector_reports
@@ -96,7 +137,14 @@ export function IncidentSheet({ run }: { run: RunState }) {
       {!route && <p className={clsx('serif mt-8 text-[22px] leading-[1.5] text-bone', run.phase === 'routing' && 'hl hl-anim')}>{incident}</p>}
       {route && (
         <div className="mt-6">
-          <h2 className="serif text-[42px] font-normal leading-[1.08] tracking-tight text-bone">{route.headline}</h2>
+          <div className="mb-3 flex flex-wrap items-baseline gap-x-2 text-[12.5px] text-fog">
+            <span>CrewAI Flow</span><span>@start intake →</span><span>@router →</span>
+            {(['haunting', 'real_world', 'control'] as const).map((b) => (
+              <span key={b} className={clsx(route.incident_class === b ? 'hl hl-anim text-bone' : 'line-through decoration-[#d6d3cc]')}>{b.replace('_', ' ')}</span>
+            ))}
+            <span>→ {route.incident_class === 'control' ? '2 agents' : '3 agents'} → commander → @listen compose</span>
+          </div>
+          <h2 className={clsx('serif font-normal leading-[1.08] tracking-tight text-bone transition-all', d ? 'text-[30px]' : 'text-[42px]')}>{route.headline}</h2>
           <div className="mt-3 text-[13.5px] text-ash">
             Routed to <span className="hl text-bone">{route.incident_class.replace('_', ' ')}</span> · {route.severity_tier.replace('_', ' ').toLowerCase()} · {route.primary_sector.replace(/_/g, ' ')}
             {route.civilians_at_risk > 0 && <> · <span style={{ color: 'var(--danger)' }}>{route.civilians_at_risk} people at risk</span></>}
@@ -105,7 +153,7 @@ export function IncidentSheet({ run }: { run: RunState }) {
       )}
 
       {route && (
-        <div className="mt-10 grid grid-cols-3 gap-8">
+        <div className={clsx('grid grid-cols-3 gap-8 transition-all', d ? 'mt-6' : 'mt-10')}>
           {SCOUTS.map(({ key, name, field, tool }) => {
             const lane = run.lanes[key]
             const b = partialBrief(run, key)
@@ -121,15 +169,23 @@ export function IncidentSheet({ run }: { run: RunState }) {
                 <div className="mt-1 text-[12px] text-fog">
                   {lane.knows ? <>sees {lane.knows.slice(0, 2).join(', ')} · <span className="line-through decoration-[#c9c5bc]">{(lane.blind || []).slice(0, 2).join(', ')}</span></> : skipped ? 'not consulted on a control event' : ' '}
                 </div>
-                <div className="serif mt-3 min-h-[96px] text-[16.5px] leading-[1.45] text-bone">
+                <div className={clsx('serif mt-3 text-[16.5px] leading-[1.45] text-bone', d ? 'line-clamp-2' : 'min-h-[96px]')}>
                   {sentence ? <span className={clsx(lane.status === 'thinking' && 'caret')}>{sentence}</span>
                     : <span className="italic text-fog flicker">{skipped ? '' : lane.tool || (lane.status === 'thinking' ? 'thinking with partial knowledge…' : 'waiting for its tools…')}</span>}
                 </div>
-                {key === 'verifier' && youcomCalls > 0 && <div className="mt-2 text-[11.5px] text-fog">{youcomCalls} You.com calls · {run.evidence.length} sources</div>}
-                {key === 'archivist' && run.grimoire.length > 0 && <div className="mt-2 text-[11.5px] text-fog">{run.grimoire.length} grimoire hits · top {run.grimoire[0]?.similarity?.toFixed(2)}</div>}
-                {key === 'sentinel' && run.sectorScores.length > 0 && <div className="mt-2 text-[11.5px] text-fog">signature {run.sectorScores[0]?.signature_score} · {run.sectorScores[0]?.verdict}</div>}
-                <div className="mt-3 h-7">
-                  {b.recommends && <span className="serif text-[22px] italic" style={{ color: ACTION_COLOR[b.recommends] }}>{b.recommends}</span>}
+                {!d && key === 'verifier' && (
+                  <div className="mt-2 flex flex-col gap-0.5 text-[12px] text-ash">
+                    {(route.verification_queries || []).slice(0, 2).map((q) => <span key={q} className="truncate">⌕ “{q}”</span>)}
+                    {run.evidence.length > 0 && <span className="text-fog">{youcomCalls} You.com calls · {run.evidence.length} sources</span>}
+                  </div>
+                )}
+                {!d && key === 'archivist' && run.grimoire.length > 0 && <div className="mt-2 text-[11.5px] text-fog">{run.grimoire.length} grimoire hits · top {run.grimoire[0]?.similarity?.toFixed(2)}</div>}
+                {!d && key === 'sentinel' && run.sectorScores.length > 0 && <div className="mt-2 text-[11.5px] text-fog">signature {run.sectorScores[0]?.signature_score} · {run.sectorScores[0]?.verdict}</div>}
+                <div className="mt-3 flex h-7 items-baseline gap-2">
+                  {b.recommends && (
+                    <span className={clsx('serif text-[22px] italic', d && (b.recommends === d.action ? 'hl hl-anim' : 'strike'))} style={{ color: ACTION_COLOR[b.recommends] }}>{b.recommends}</span>
+                  )}
+                  {d && b.recommends && <span className="text-[12px] text-fog">{b.recommends === d.action ? 'carried' : 'overruled'}</span>}
                 </div>
               </div>
             )
@@ -138,36 +194,40 @@ export function IncidentSheet({ run }: { run: RunState }) {
       )}
 
       {route && (
-        <div className="mt-10 border-t border-[var(--ink)] pt-5">
+        <div ref={verdictRef} className={clsx('border-t border-[var(--ink)] pt-5', d ? 'mt-6' : 'mt-10')}>
           <div className="flex items-baseline justify-between">
             <span className="text-[15px] font-medium text-bone">Commander</span>
             <span className="serif text-[12.5px] italic text-fog">sees only the three briefs</span>
           </div>
           {!d ? (
-            <div className="serif mt-4 text-[22px] italic text-fog flicker">{run.lanes.commander.status === 'thinking' ? 'weighing the briefs under doctrine…' : 'waiting for the briefs…'}</div>
+            <div className="serif mt-4 text-[22px] italic text-ash flicker">{run.lanes.commander.status === 'thinking' ? suspense(run) : 'waiting for the briefs…'}</div>
           ) : (
             <div className="mt-3">
-              <div className="flex items-baseline gap-5">
-                <span className="serif text-[76px] font-normal italic leading-none" style={{ color: ACTION_COLOR[d.action] }}>
-                  <span className="hl hl-anim">{cap(d.action)}.</span>
-                </span>
-                <span className="text-[14px] text-ash">{Math.round(d.confidence * 100)}% confidence · threat {d.threat_level}/5</span>
-              </div>
-              <p className="serif mt-4 text-[20px] leading-snug text-bone">{d.rationale}</p>
-              <p className="serif mt-2 text-[16px] italic text-ash">{resolution(run)} {d.dissent}</p>
-              <div className="mt-3"><Counterfactual run={run} /></div>
+              {run.counterfactual?.action && run.counterfactual.action !== d.action ? <Fork run={run} /> : (
+                <div className="beat flex items-baseline gap-5">
+                  <span className="serif text-[76px] font-normal italic leading-none" style={{ color: ACTION_COLOR[d.action] }}>
+                    <span className="hl hl-anim">{cap(d.action)}.</span>
+                  </span>
+                  <span className="text-[14px] text-ash">{Math.round(d.confidence * 100)}% confidence · threat {d.threat_level}/5 · decided in {((run.timeline.find((x) => x.label.startsWith('Commander:'))?.t || 0) / 1000).toFixed(1)} s</span>
+                </div>
+              )}
+              <p className="beat serif mt-4 text-[20px] leading-snug text-bone" style={{ animationDelay: '900ms' }}>{d.rationale}</p>
+              <p className="beat serif mt-3 text-[18px] text-bone" style={{ animationDelay: '1400ms' }}>{resolution(run)}</p>
+              {d.dissent && <p className="beat mt-1 text-[14px] text-ash" style={{ animationDelay: '1600ms' }}>{d.dissent}</p>}
+              {!(run.counterfactual?.action && run.counterfactual.action !== d.action) && <div className="beat mt-3" style={{ animationDelay: '1900ms' }}><Counterfactual run={run} /></div>}
             </div>
           )}
         </div>
       )}
 
-      {run.phase === 'compiling' && <div className="serif mt-10 text-[20px] italic text-ash">Composing the interface for this incident<span className="caret" /></div>}
+      {failed && <div className="serif mt-10 text-[19px] italic text-ash">The station couldn’t be written live this time ({failed.slice(0, 80)}). The verdict above stands; recorded runs are under <span className="hl text-bone">Replays</span>.</div>}
+      {run.phase === 'compiling' && <div className="serif mt-10 text-[20px] italic text-ash">Writing the interface for this incident{written ? ` · ${written} component${written > 1 ? 's' : ''} so far` : ''}<span className="caret" /></div>}
     </div>
   )
 }
 
 /** Once the station starts assembling, the verdict docks above it. */
-export function VerdictBar({ run, onDispatch }: { run: RunState; onDispatch: () => void }) {
+export function VerdictBar({ run, onDispatch, onNext }: { run: RunState; onDispatch?: () => void; onNext?: () => void }) {
   const d = run.decision
   if (!d) return null
   return (
@@ -181,7 +241,8 @@ export function VerdictBar({ run, onDispatch }: { run: RunState; onDispatch: () 
           <p className="serif mt-1.5 truncate text-[16px] text-bone">{d.rationale}</p>
           <div className="mt-0.5 truncate"><span className="serif text-[13.5px] italic text-ash">{resolution(run)}</span> <Counterfactual run={run} compact /></div>
         </div>
-        {d.escalate !== false && (
+        {onNext && <button onClick={onNext} className="hl shrink-0 text-[14px] text-bone">Next tick →</button>}
+        {d.escalate !== false && onDispatch && (
           <button onClick={onDispatch} className="shrink-0 rounded-lg bg-[var(--ink)] px-4 py-2.5 text-[14px] font-medium text-white hover:bg-black">Dispatch ↓</button>
         )}
       </div>

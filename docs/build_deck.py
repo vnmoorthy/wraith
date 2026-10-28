@@ -41,9 +41,12 @@ P159 = "http://schemas.microsoft.com/office/powerpoint/2015/09/main"
 def render() -> None:
     OUT_IMG.mkdir(parents=True, exist_ok=True)
     for n in range(1, 11):
-        subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--virtual-time-budget=5000",
-                        f"--screenshot={OUT_IMG / f'slide-{n}.png'}", "--window-size=1920,1080",
-                        f"{BASE}/docs/deck/index.html?static=1#{n}"], check=True, capture_output=True)
+        for attempt in range(3):  # headless Chrome occasionally exits early; a retry is enough
+            res = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--virtual-time-budget=5000",
+                                  f"--screenshot={OUT_IMG / f'slide-{n}.png'}", "--window-size=1920,1080",
+                                  f"{BASE}/docs/deck/index.html?static=1#{n}"], capture_output=True)
+            if res.returncode == 0 and (OUT_IMG / f"slide-{n}.png").exists():
+                break
         png = OUT_IMG / f"slide-{n}.png"
         subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "82", str(png), "--out",
                         str(png.with_suffix(".jpg"))], check=True, capture_output=True)

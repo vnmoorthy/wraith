@@ -12,18 +12,18 @@ export function Frame({ spec, building, children, className, span }: {
   const color = SOURCE_COLORS[src] || '#161615'
   return (
     <section
-      className={clsx('panel materialize relative flex flex-col', building && 'building', className)}
-      style={provenance ? { borderColor: color, boxShadow: `inset 3px 0 0 ${color}` } : undefined}
+      className={clsx('materialize relative flex flex-col border-t bg-white', building && 'building', className)}
+      style={{ borderColor: provenance ? color : 'var(--hair-2)', borderTopWidth: provenance ? 2 : 1 }}
     >
-      <header className="flex items-baseline justify-between gap-3 px-5 pt-4">
-        <span className="truncate text-[12.5px] font-medium text-ash">{spec.title || spec.component}</span>
+      <header className="flex items-baseline justify-between gap-3 pt-3">
+        <span className="serif truncate text-[21px] text-bone">{spec.title || spec.component}</span>
         <span title={`${AGENT_META[src]?.name}: ${AGENT_META[src]?.role}${spec.why ? ` — ${spec.why}` : ''}`}
           className="serif shrink-0 text-[11.5px] italic" style={{ color }}>
           {building ? 'composing…' : `via ${AGENT_META[src]?.name.toLowerCase()}`}
         </span>
       </header>
-      {provenance && spec.why && <div className="serif px-5 pt-1 text-[12px] italic text-fog">{spec.why}</div>}
-      <div className="flex-1 px-5 pb-5 pt-3">{children}</div>
+      {provenance && spec.why && <div className="serif pt-1 text-[13px] italic text-fog">{spec.why}</div>}
+      <div className="flex-1 pb-6 pt-3">{children}</div>
     </section>
   )
 }

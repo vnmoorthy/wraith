@@ -1,0 +1,25 @@
+{
+  "title": "WRAITH — the war room that builds itself",
+  "segments": [
+    {"id": "01", "kind": "face", "caption": "Every incident is different",
+     "line": "Every incident is different. But the dashboard you get at three in the morning was built months ago, for somebody else's crisis."},
+    {"id": "02", "kind": "screen", "clip": "live142", "window": [0, 6], "caption": "Describe the incident",
+     "line": "So we built Wraith. You describe what's happening, and the war room builds itself."},
+    {"id": "03", "kind": "screen", "clip": "live142", "window": [6, 15], "caption": "Three agents, three partial views",
+     "line": "A CrewAI flow reads the incident and routes it. Then three agents go to work, and each one only sees part of the picture. One reads the instruments. One searches our playbooks with Parasail embeddings. One checks the live web with You.com."},
+    {"id": "04", "kind": "screen", "clip": "live142", "window": [15, 21], "caption": "The commander breaks the tie",
+     "line": "They disagree. Contain. Evacuate. Observe. The commander only sees their briefs, and it breaks the tie: evacuate. Four people are pinned in the contact zone."},
+    {"id": "05", "kind": "screen", "clip": "xray", "window": [11, 24], "caption": "Parasail writes the interface",
+     "line": "And then, this is the part I love, Parasail streams the interface itself. Every panel you see was chosen, ordered and filled by the model, for this incident, while you watch."},
+    {"id": "06", "kind": "screen", "clip": "operate", "window": [9, 21], "caption": "Operate it. One sends it.",
+     "line": "It's not a picture, it's a console. Start the evacuation, and the alert rewrites itself. One sends it to the team's Discord, step by step."},
+    {"id": "07", "kind": "screen", "clip": "wildfire", "window": [2, 18], "caption": "The live web changes the decision",
+     "line": "Try a real one. Wildfire smoke over the Bay. Without the live web, the commander would have evacuated three hundred people. With You.com, it saw today's air quality, and said observe."},
+    {"id": "08", "kind": "screen", "clip": "control", "window": [1, 14], "caption": "Zero false alarms",
+     "line": "And when it's just a crowd of people, it knows. No panic. Zero false alarms."},
+    {"id": "09", "kind": "face", "caption": "Incidents are the market",
+     "line": "Halloween is the demo. Incidents are the market: on-call engineers, venues, emergency teams. Any incident, its own war room, in about fifteen seconds."},
+    {"id": "10", "kind": "face", "caption": "github.com/vnmoorthy/wraith",
+     "line": "We picked this idea by running a hundred AI judges against ten ideas. It won all hundred votes. Then two hundred more agents red-teamed the product. It's open source. This is Wraith, the war room that builds itself."}
+  ]
+}

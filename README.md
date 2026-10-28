@@ -2,23 +2,17 @@
 
 <img src="docs/img/hero.jpg" alt="WRAITH — the war room that builds itself" width="100%" />
 
-# WRAITH
+# Wraith
 
 ### The war room that builds itself.
 
 **Describe any incident — a haunting on the venue floor or a real outage at 3 AM. A CrewAI swarm with partial knowledge deliberates, the live web verifies it, and Parasail streams a bespoke, *operable* command station into existence, component by component. One button and the room's Discord lights up.**
 
-[![CrewAI](https://img.shields.io/badge/CrewAI-Flow%20%2B%20swarm-fb923c?style=for-the-badge)](https://crewai.com)
-[![Parasail](https://img.shields.io/badge/Parasail-streaming%20·%20json__schema%20·%20BGE-M3-a78bfa?style=for-the-badge)](https://parasail.io)
-[![You.com](https://img.shields.io/badge/You.com-search%20%2B%20contents-60a5fa?style=for-the-badge)](https://you.com)
-[![One](https://img.shields.io/badge/One-Discord%20actions-4ade80?style=for-the-badge)](https://withone.ai)
-<br/>
-[![Python](https://img.shields.io/badge/python-3.10–3.13-3776ab?style=flat-square&logo=python&logoColor=white)](#quickstart)
-[![React](https://img.shields.io/badge/react-19-61dafb?style=flat-square&logo=react&logoColor=black)](#the-renderer)
-[![License: MIT](https://img.shields.io/badge/license-MIT-ece7f6?style=flat-square)](LICENSE)
-[![Hack with YOU](https://img.shields.io/badge/Hack%20with%20YOU-Halloween%202026-f43f5e?style=flat-square)](https://youdotcom-oss.github.io/halloween-hack-2026/)
+<sub>
+<a href="https://crewai.com">CrewAI</a> · <a href="https://parasail.io">Parasail</a> · <a href="https://you.com">You.com</a> · <a href="https://withone.ai">One</a> · Python 3.10–3.13 · React 19 · MIT · <a href="https://youdotcom-oss.github.io/halloween-hack-2026/">Hack with YOU, Halloween 2026</a>
+</sub>
 
-[**Quickstart**](#quickstart) · [**How it works**](#how-it-works) · [**Architecture**](#architecture) · [**Why every partner is load-bearing**](#every-partner-is-load-bearing) · [**Pitch deck**](docs/deck/index.html) · [**Demo script**](docs/STORYBOARD.md)
+[**Watch a recorded run**](https://vnmoorthy.github.io/wraith/app/) · [**Quickstart**](#quickstart) · [**How it works**](#how-it-works) · [**Architecture**](#architecture) · [**Every partner is load-bearing**](#every-partner-is-load-bearing) · [**Deck**](https://vnmoorthy.github.io/wraith/deck/) · [**Video script**](video/VIDEO_SCRIPT.md)
 
 </div>
 
@@ -43,18 +37,44 @@ WRAITH treats the interface as the *output* of an agent swarm, not a template it
 The same engine plays the venue's **Track 1 scenario feed on autopilot** — and refuses to escalate the harmless control tick.
 
 <div align="center">
-<img src="docs/img/station-haunting.jpg" alt="A generated station for a level-5 phantom at the coffee bar" width="100%" />
-<sub><b>Venue feed → a spectral command station.</b> Every panel was chosen, ordered and filled by the model for this incident. Provenance badges show which agent's intel built each one.</sub>
+<img src="docs/img/sheet.jpg" alt="The incident sheet: three agents with partial knowledge write their briefs" width="100%" />
+<sub><b>1 · The swarm deliberates in the open.</b> The router's headline, the CrewAI branch it took, and three agents — each seeing only part of the picture — typing their briefs and votes.</sub>
 </div>
 
 <br/>
 
 <div align="center">
-<img src="docs/img/station-reality.jpg" alt="A generated station for a real-world incident" width="100%" />
-<sub><b>Reality mode → a completely different station.</b> Same engine, a plain-English real incident, a different layout, theme and evidence — grounded in what the live web says right now.</sub>
+<img src="docs/img/verdict.jpg" alt="The verdict: without the live web, evacuate; with You.com, observe" width="100%" />
+<sub><b>2 · The commander decides — and you see what the live web changed.</b> Wildfire smoke over the Bay: without You.com the commander would have moved 300 people; with today's air quality it says <i>observe</i>.</sub>
+</div>
+
+<br/>
+
+<div align="center">
+<img src="docs/img/station-haunting.jpg" alt="The generated station, verdict docked above it" width="100%" />
+<sub><b>3 · Then the station writes itself.</b> Every section was chosen, ordered and filled by Parasail for this incident. The verdict docks on top; Dispatch is one click away.</sub>
+</div>
+
+<br/>
+
+<div align="center">
+<img src="docs/img/station-reality.jpg" alt="A different incident gets a different station" width="100%" />
+<sub><b>4 · A different incident, a different station.</b> "Is it us or AWS?" — a PagerDuty alert with real telemetry gets an SRE console, not a ghost radar.</sub>
 </div>
 
 ---
+
+## What you will see
+
+| Moment | What happens | Partner on stage |
+|---|---|---|
+| **Read** | the incident appears; the router names it and takes a branch — `haunting`, `real world` or `control` | CrewAI Flow `@router` on Parasail |
+| **Gather** | each agent's tools run in parallel; the Verifier's You.com queries print as they go | You.com, Parasail BGE-M3, the venue oracle |
+| **Deliberate** | three columns type their briefs as sentences; votes appear — *contain*, *evacuate*, *observe* | CrewAI agents on Parasail |
+| **Decide** | the verdict lands in 76 px serif; carried votes are highlighted, overruled ones struck through; the counterfactual shows what the live web changed | Parasail (thinking on), You.com |
+| **Compose** | the station writes itself section by section while the camera follows the pen, then pulls back | Parasail streaming `json_schema` |
+| **Act** | isolate sectors, arm countermeasures, move people; the alert rewrites itself; Dispatch walks One's three tools step by step | One |
+| **Escalate** | *Next tick →* feeds tick 143 (EMF 98 → 131 mG) and the station rebuilds | the scenario feed |
 
 ## Quickstart
 
@@ -245,14 +265,14 @@ Same engine, different incident, **different interface**.
 
 Verbatim from the recorded live runs shipped in [`wraith/recordings/`](wraith/recordings) (open them in **Replays**):
 
-| Incident | Branch · theme | Commander | Why — in its own words |
-|---|---|---|---|
-| Venue fixture `spooky-2026-9912` | haunting · spectral-goth-dark | **EVACUATE** 0.82 | *"Operator reports 4 civilians pinned; Archivist confirms hostile mobile Level-5. Life safety outranks Verifier's low-credibility observe call."* |
-| Tick 142 | haunting · spectral-goth-dark | **EVACUATE** 0.62 | *"Sentinel urged contain, Verifier urged observe (credibility 0.2, mundane cause ruled out). Civilian exposure and mobility break the tie toward evacuate."* |
-| Tick 900 (control) | control · ectoplasm-green | **OBSERVE** 0.95 | *"Motion +2.07z with flat EMF/temp and zero civilians: crowd traffic, not an entity."* No dispatch, no false alarm. |
-| "Power fails at the Loft during demos" | real_world · daylight-ops | **EVACUATE** 0.78 | *"Operator reports two civilians trapped in SE stairwell; life safety overrides unverified web feed."* |
-| "AWS us-east-1 is throwing 5xx" | real_world · abyssal-blue | **OBSERVE** 0.60 | *"Verifier confirms AWS thermal event but checkout 5xx claims unverified and Upstash contradicts."* |
-| "Wildfire smoke over the Bay" | real_world · daylight-ops | **OBSERVE** 0.72 | *"Live AQI is Good/Moderate (20-52); smoke reports are dated 2023."* — the live web changed the decision. |
+| Incident | Branch · theme | Commander | Without the live web | Why — in its own words |
+|---|---|---|---|---|
+| Venue fixture `spooky-2026-9912` | haunting · spectral goth dark | **EVACUATE** 86% | evacuate 90% | *"Operator reports 4 engineers pinned by hostile mobile Level-5 Phantom; life safety overrides web silence."* |
+| Tick 142 | haunting · spectral goth dark | **EVACUATE** 82% | evacuate 90% | *"Operator reports 4 civilians pinned; first-hand life-safety report is authoritative regardless of web verification."* |
+| Tick 900 (control) | control · ectoplasm green | **OBSERVE** 95% | — | *"Motion +2.07z with normal EMF (3 mG) and temp 21C: crowd, not entity. No civilians at risk."* |
+| "Power fails at the Loft during demos" | real world · daylight ops | **EVACUATE** 82% | evacuate 82% | *"Operator reports ~120 civilians trapped in a dark, unlit SE stairwell; life safety overrides zero-signature instrument feeds."* |
+| "Is it us or AWS?" (PagerDuty P1 with telemetry) | real world · abyssal blue | **CONTAIN** 72% | contain 72% | *"Verifier confirms real AWS US-EAST-1 thermal outage; 78x 5xx and payment failures are live, not a control tick."* |
+| "Wildfire smoke over the Bay" | real world · daylight ops | **OBSERVE** 72% | **evacuate** 60% → changed by You.com | *"Live AQI 20-56 Good/Moderate contradicts heavy smoke; non-hostile drifting hazard, no sensor feed, no injuries reported."* |
 
 <table>
 <tr>

@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useEffect, useRef } from 'react'
 import { useStation } from '../../lib/station'
 import type { ComponentSpec } from '../../lib/types'
 import { Frame, fmtSector } from './Frame'
@@ -18,16 +19,16 @@ const LOFT: Record<string, { x: number; y: number; w: number; h: number; label: 
 }
 
 const STATUS: Record<string, { fill: string; stroke: string; label: string }> = {
-  breached: { fill: 'rgba(251,113,133,0.22)', stroke: 'var(--danger)', label: 'breached' },
-  hazard: { fill: 'rgba(251,191,36,0.16)', stroke: 'var(--warn)', label: 'hazard' },
+  breached: { fill: 'rgba(178,58,30,0.10)', stroke: 'var(--danger)', label: 'breached' },
+  hazard: { fill: 'rgba(162,101,13,0.08)', stroke: 'var(--warn)', label: 'hazard' },
   isolated: { fill: 'url(#hatch)', stroke: 'var(--accent)', label: 'isolated' },
-  holding: { fill: 'rgba(125,211,252,0.07)', stroke: 'rgba(125,211,252,0.45)', label: 'holding' },
-  clear: { fill: 'rgba(255,255,255,0.025)', stroke: 'rgba(255,255,255,0.14)', label: 'clear' },
+  holding: { fill: 'rgba(43,78,134,0.05)', stroke: 'rgba(43,78,134,0.45)', label: 'holding' },
+  clear: { fill: '#ffffff', stroke: '#dcd8d0', label: 'clear' },
 }
 
 function zoneStatus(id: string, p: any, isolated: string[]) {
-  if (isolated.includes(id)) return 'isolated'
   if (p.highlight_sector === id) return 'breached'
+  if (isolated.includes(id)) return 'isolated'
   if ((p.hazard_zones || []).includes(id)) return 'hazard'
   const z = (p.zones || []).find((z: any) => z.id === id)
   return z?.status || 'clear'
@@ -36,7 +37,13 @@ function zoneStatus(id: string, p: any, isolated: string[]) {
 export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: boolean }) {
   const p = spec.props || {}
   const { op, setOp } = useStation()
-  const isolated: string[] = Array.from(new Set([...(p.isolated_zones || []), ...op.isolated]))
+  const seeded = useRef(false)
+  useEffect(() => {
+    if (seeded.current || !Array.isArray(p.isolated_zones) || !p.isolated_zones.length) return
+    seeded.current = true
+    setOp((o) => ({ ...o, isolated: Array.from(new Set([...o.isolated, ...p.isolated_zones])) }))
+  }, [p.isolated_zones, setOp])
+  const isolated: string[] = op.isolated
   const toggle = (id: string) =>
     setOp((o) => ({ ...o, isolated: o.isolated.includes(id) ? o.isolated.filter((z) => z !== id) : [...o.isolated, id] }))
   const civilians: any[] = p.civilians || []
@@ -48,22 +55,23 @@ export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: 
         <svg viewBox="0 0 600 360" className="mx-auto block h-auto max-h-[400px] w-full max-w-[760px] select-none">
           <defs>
             <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <rect width="8" height="8" fill="rgba(167,139,250,0.08)" />
-              <line x1="0" y1="0" x2="0" y2="8" stroke="var(--accent)" strokeOpacity="0.45" strokeWidth="2" />
+              <rect width="8" height="8" fill="rgba(22,22,21,0.03)" />
+              <line x1="0" y1="0" x2="0" y2="8" stroke="#161615" strokeOpacity="0.35" strokeWidth="1.4" />
             </pattern>
             <filter id="glow"><feGaussianBlur stdDeviation="4" /></filter>
           </defs>
-          <rect x="2" y="2" width="596" height="356" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" />
+          <rect x="2" y="2" width="596" height="356" rx="10" fill="none" stroke="#ebe8e2" />
           {Object.entries(LOFT).map(([id, r]) => {
             const st = zoneStatus(id, p, isolated)
             const s = STATUS[st] || STATUS.clear
             return (
               <g key={id} onClick={() => toggle(id)} className="cursor-pointer">
-                {st === 'breached' && <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="8" fill="var(--danger)" opacity="0.35" filter="url(#glow)" className="animate-pulse" />}
+                {st === 'breached' && <rect x={r.x - 3} y={r.y - 3} width={r.w + 6} height={r.h + 6} rx="10" fill="none" stroke="var(--danger)" strokeOpacity="0.35" className="animate-pulse" />}
                 <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="8" fill={s.fill} stroke={s.stroke} strokeWidth={st === 'clear' ? 1 : 1.6}
                   className="transition-all duration-300 hover:brightness-150" />
-                <text x={r.x + 7} y={r.y + 16} fontSize={r.w < 90 ? 8.5 : 10} fill="rgba(236,231,246,0.85)" fontFamily="JetBrains Mono">{r.label}</text>
-                {st !== 'clear' && <text x={r.x + 7} y={r.y + 29} fontSize="8.5" fill={s.stroke} fontFamily="JetBrains Mono" letterSpacing="1">{s.label.toUpperCase()}</text>}
+                <text x={r.x + 7} y={r.y + 16} fontSize={r.w < 90 ? 8.5 : 10} fill="#161615" fontFamily="Geist, Inter, sans-serif">{r.label}</text>
+                {st === 'breached' && isolated.includes(id) && <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="8" fill="url(#hatch)" />}
+                {st !== 'clear' && <text x={r.x + 7} y={r.y + 29} fontSize="8.5" fill={s.stroke} fontFamily="Newsreader, Georgia, serif" fontStyle="italic">{s.label}</text>}
               </g>
             )
           })}
@@ -71,7 +79,7 @@ export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: 
             const r = LOFT[c.sector]
             if (!r) return null
             const status = op.civilianOverrides[c.sector] || c.status
-            const color = status === 'safe' ? 'var(--ok)' : status === 'evacuating' ? 'var(--warn)' : 'var(--bone, #ece7f6)'
+            const color = status === 'safe' ? 'var(--ok)' : status === 'evacuating' ? 'var(--warn)' : 'var(--danger)'
             return (
               <g key={i}>
                 {Array.from({ length: Math.min(12, Number(c.count) || 0) }).map((_, j) => (
@@ -79,14 +87,14 @@ export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: 
                     <animate attributeName="opacity" values="1;0.4;1" dur={`${1.2 + j * 0.13}s`} repeatCount="indefinite" />
                   </circle>
                 ))}
-                <text x={r.x + r.w - 8} y={r.y + r.h - 10} textAnchor="end" fontSize="10" fill={color} fontFamily="JetBrains Mono">{c.count} {status}</text>
+                <text x={r.x + r.w - 8} y={r.y + r.h - 10} textAnchor="end" fontSize="10" fill={color} fontFamily="Geist, Inter, sans-serif">{c.count} {status}</text>
               </g>
             )
           })}
           {(p.exits || ['stairwell_west', 'stairwell_se']).map((e: string) => {
             const r = LOFT[e]
             if (!r) return null
-            return <text key={e} x={r.x + r.w / 2} y={r.y + r.h / 2 + 8} textAnchor="middle" fontSize="20" fill="var(--ok)">⇲</text>
+            return <text key={e} x={r.x + r.w / 2} y={r.y + r.h / 2 + 6} textAnchor="middle" fontSize="11" fill="var(--ok)" fontFamily="Newsreader, Georgia, serif" fontStyle="italic">exit →</text>
           })}
         </svg>
       ) : (
@@ -97,7 +105,7 @@ export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: 
             return (
               <button key={z.id} onClick={() => toggle(z.id)}
                 className={clsx('rounded-xl border p-3 text-left transition hover:brightness-125', st === 'breached' && 'animate-pulse')}
-                style={{ borderColor: s.stroke, background: st === 'isolated' ? 'rgba(167,139,250,0.1)' : s.fill }}>
+                style={{ borderColor: s.stroke, background: st === 'isolated' ? 'rgba(22,22,21,0.05)' : s.fill }}>
                 <div className="truncate font-mono text-[11px] text-bone">{z.label || fmtSector(z.id)}</div>
                 <div className="mt-1 font-mono text-[10px] uppercase tracking-wider" style={{ color: s.stroke }}>{s.label}</div>
                 {civilians.filter((c) => c.sector === z.id).map((c, i) => (
@@ -110,7 +118,7 @@ export function SectorMap({ spec, building }: { spec: ComponentSpec; building?: 
       )}
       <div className="mt-3 flex flex-wrap items-center gap-3 font-mono text-[10px] text-ash">
         {Object.entries(STATUS).map(([k, s]) => (
-          <span key={k} className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm border" style={{ borderColor: s.stroke, background: k === 'isolated' ? 'rgba(167,139,250,0.3)' : s.fill }} />{k}</span>
+          <span key={k} className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm border" style={{ borderColor: s.stroke, background: k === 'isolated' ? 'rgba(22,22,21,0.2)' : s.fill }} />{k}</span>
         ))}
         <span className="ml-auto text-fog">click a sector to isolate it · {isolated.length} isolated</span>
       </div>

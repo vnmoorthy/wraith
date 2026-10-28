@@ -13,23 +13,23 @@ export function ThreatHeader({ spec, building }: { spec: ComponentSpec; building
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
             {p.severity_tier && (
-              <span className={clsx('rounded px-2 py-0.5 font-mono text-[11px] font-bold tracking-widest', hot ? 'bg-[var(--danger)]/15 text-[var(--danger)]' : 'bg-white/5 text-[var(--accent)]')}>
+              <span className={clsx('rounded px-2 py-0.5 font-mono text-[11px] font-bold tracking-widest', hot ? 'bg-[var(--danger)]/15 text-[var(--danger)]' : 'bg-black/[0.04] text-[var(--accent)]')}>
                 {hot && <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--danger)] align-middle" />}
                 {p.severity_tier}
               </span>
             )}
-            {p.entity && <span className="rounded bg-white/5 px-2 py-0.5 font-mono text-[11px] text-bone/80">{p.entity}</span>}
+            {p.entity && <span className="rounded bg-black/[0.04] px-2 py-0.5 font-mono text-[11px] text-bone/80">{p.entity}</span>}
             {p.incident_id && <span className="font-mono text-[11px] text-fog">#{p.incident_id}</span>}
           </div>
-          <h2 className="font-display text-2xl font-bold leading-tight text-bone glow-text md:text-[28px]">{p.headline || '…'}</h2>
+          <h2 className="serif text-[30px] font-medium leading-[1.1] tracking-tight text-bone md:text-[36px]">{p.headline || '…'}</h2>
         </div>
         <div className="flex shrink-0 items-end gap-6">
           <div>
             <div className="panel-title mb-1">threat level</div>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-7 w-3 rounded-sm transition-all duration-500"
-                  style={{ background: i <= level ? (level >= 4 ? 'var(--danger)' : level >= 3 ? 'var(--warn)' : 'var(--ok)') : 'rgba(255,255,255,0.06)', boxShadow: i <= level ? '0 0 10px currentColor' : undefined, transitionDelay: `${i * 90}ms` }} />
+                <div key={i} className="h-6 w-[5px] rounded-full transition-all duration-500"
+                  style={{ background: i <= level ? (level >= 4 ? 'var(--danger)' : level >= 3 ? 'var(--warn)' : 'var(--ok)') : 'var(--hair)', transitionDelay: `${i * 90}ms` }} />
               ))}
             </div>
           </div>
@@ -57,12 +57,12 @@ export function EMFRadar({ spec, building }: { spec: ComponentSpec; building?: b
         <svg viewBox="0 0 200 200" className="h-40 w-40 shrink-0">
           <defs>
             <radialGradient id="rg" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor={color} stopOpacity="0.18" />
+              <stop offset="0%" stopColor={color} stopOpacity="0.07" />
               <stop offset="100%" stopColor={color} stopOpacity="0" />
             </radialGradient>
             <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={color} stopOpacity="0" />
-              <stop offset="100%" stopColor={color} stopOpacity="0.55" />
+              <stop offset="100%" stopColor={color} stopOpacity="0.28" />
             </linearGradient>
           </defs>
           <circle cx="100" cy="100" r="96" fill="url(#rg)" stroke={color} strokeOpacity="0.35" />
@@ -84,10 +84,10 @@ export function EMFRadar({ spec, building }: { spec: ComponentSpec; building?: b
           })}
         </svg>
         <div>
-          <div className="font-mono text-5xl font-bold tabular-nums" style={{ color, textShadow: `0 0 24px ${color}` }}>{value}</div>
+          <div className="serif text-[64px] font-light leading-none tabular-nums" style={{ color }}>{value}</div>
           <div className="font-mono text-xs text-ash">milligauss · {fmtSector(p.sector)}</div>
           <div className="mt-3 flex items-center gap-2">
-            <span className="rounded px-2 py-0.5 font-mono text-[11px] font-bold uppercase" style={{ color, background: 'rgba(255,255,255,0.05)' }}>{p.status || '—'}</span>
+            <span className="serif text-[15px] italic" style={{ color }}>{p.status || '—'}</span>
             {typeof p.trend === 'number' && p.trend !== 0 && (
               <span className="font-mono text-xs" style={{ color: p.trend > 0 ? 'var(--danger)' : 'var(--ok)' }}>{p.trend > 0 ? '▲' : '▼'} {Math.abs(p.trend)} since last tick</span>
             )}
@@ -105,7 +105,7 @@ export function StatGrid({ spec, building }: { spec: ComponentSpec; building?: b
     <Frame spec={spec} building={building}>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {stats.map((s, i) => (
-          <div key={i} className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
+          <div key={i} className="rounded-xl border border-[var(--hair)] bg-[var(--sunk)] p-3">
             <div className="panel-title truncate">{s.label}</div>
             <div className="mt-1 font-mono text-2xl font-bold tabular-nums" style={{ color: toneColor(s.tone) }}>
               {s.value}<span className="ml-1 text-xs font-normal text-ash">{s.unit}</span>
@@ -140,7 +140,7 @@ export function TelemetryChart({ spec, building }: { spec: ComponentSpec; buildi
               <svg viewBox="0 0 300 76" className="h-16 w-full" preserveAspectRatio="none">
                 {s.danger_threshold != null && <line x1="0" x2="300" y1={ty} y2={ty} stroke="var(--danger)" strokeDasharray="4 4" strokeOpacity="0.5" />}
                 <polyline points={`0,76 ${pts} 300,76`} fill={c} fillOpacity="0.08" stroke="none" />
-                <polyline points={pts} fill="none" stroke={c} strokeWidth="2" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${c})` }} />
+                <polyline points={pts} fill="none" stroke={c} strokeWidth="2" strokeLinejoin="round"  />
               </svg>
             </div>
           )

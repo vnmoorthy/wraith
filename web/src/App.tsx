@@ -122,11 +122,11 @@ export default function App() {
           ABLATION ACTIVE — next run without: {Object.entries(ablate).filter(([, v]) => v).map(([k]) => k).join(', ')}. Watch what breaks.
         </div>
       )}
-      {notice && <div className="absolute left-1/2 top-16 z-50 -translate-x-1/2 rounded-lg border border-[var(--warn)]/40 bg-black/80 px-4 py-2 font-mono text-[12px] text-[var(--warn)]">{notice}</div>}
+      {notice && <div className="absolute left-1/2 top-16 z-50 -translate-x-1/2 rounded-lg border border-[var(--warn)]/40 bg-white/95 px-4 py-2 font-mono text-[12px] text-[var(--warn)]">{notice}</div>}
 
       <main className="relative z-10 min-h-0 flex-1 p-4">
         {view === 'warroom' && (
-          <StationProvider run={run} op={op} setOp={setOp} xray={xray} provenance={provenance}>
+          <StationProvider run={run} op={op} setOp={setOp} xray={xray} provenance={provenance} summon={summon}>
             <div className={clsx('grid h-full min-h-0 gap-4', xray ? 'grid-cols-[300px_minmax(0,1fr)_340px]' : 'grid-cols-[300px_minmax(0,1fr)]')}>
               <aside className="flex min-h-0 min-w-0 flex-col gap-4 overflow-auto pb-2">
                 <Intake onSummon={summon} busy={busy} />

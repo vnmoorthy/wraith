@@ -1,8 +1,11 @@
 import { AnimatePresence, motion } from 'motion/react'
-import type { ComponentType } from 'react'
+import { useEffect, useRef, type ComponentType } from 'react'
+import { api } from '../../lib/socket'
 import { useStation } from '../../lib/station'
+import { GhostMark } from '../Header'
 import type { ComponentSpec } from '../../lib/types'
 import { DispatchConsole } from './Dispatch'
+import { IncidentSheet, VerdictBar } from './Sheet'
 import { SectorMap } from './Map'
 import { CivilianTracker, CommsDraft, CountermeasureSelector, DecisionCard, EvidenceRail, GrimoireHits, ProtocolChecklist, ResourceBoard } from './Ops'
 import { EMFRadar, StatGrid, TelemetryChart, ThreatHeader } from './Threat'
@@ -18,28 +21,53 @@ function ready(c: ComponentSpec | undefined) {
 }
 
 export function Station() {
-  const { run } = useStation()
+  const { run, summon } = useStation()
   const m = run.manifest
   const comps = (m.ui_components_ordered || []).filter(ready)
   const streaming = run.phase === 'compiling' && !run.manifestDone
   const theme = m.theme || 'spectral-goth-dark'
+  const root = useRef<HTMLDivElement>(null)
+  const touched = useRef(0)
 
-  if (run.phase === 'idle') return <Summoning idle />
+  // The camera follows the pen: keep the component being written in view, then pull back to the top.
+  useEffect(() => {
+    if (!streaming || !root.current || Date.now() - touched.current < 2500) return
+    const cards = root.current.querySelectorAll('[data-card]')
+    const last = cards[cards.length - 1] as HTMLElement | undefined
+    last?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [comps.length, streaming])
+  useEffect(() => {
+    if (!run.manifestDone || !root.current) return
+    const id = setTimeout(() => root.current?.closest('.overflow-auto')?.scrollTo({ top: 0, behavior: 'smooth' }), 900)
+    return () => clearTimeout(id)
+  }, [run.manifestDone])
+  useEffect(() => {
+    const scroller = root.current?.closest('.overflow-auto')
+    const mark = () => { touched.current = Date.now() }
+    scroller?.addEventListener('wheel', mark, { passive: true })
+    return () => scroller?.removeEventListener('wheel', mark)
+  }, [comps.length > 0])
+
+  if (run.phase === 'idle') return <Idle summon={summon} />
   if (!comps.length && run.manifestError) return <DeadStation error={run.manifestError} />
-  if (!comps.length) return <Summoning phase={run.phase} />
+  if (!comps.length) return <IncidentSheet run={run} />
 
+  const toDispatch = () => {
+    touched.current = Date.now()
+    root.current?.querySelector('[data-component="DispatchConsole"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
   return (
-    <div data-theme={theme} className="flex min-w-0 flex-col gap-4">
+    <div ref={root} data-theme={theme} className="flex min-w-0 flex-col gap-4">
+      <VerdictBar run={run} onDispatch={toDispatch} />
       {(m.station_title || m.summary) && (
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="flex items-end justify-between gap-4 px-1">
           <div className="min-w-0">
-            <div className="panel-title mb-1 accent">generated station · {theme}</div>
-            <h1 className="truncate font-display text-xl font-bold text-bone">{m.station_title}</h1>
-            {m.summary && <p className="mt-1 line-clamp-2 max-w-3xl text-[13px] text-ash">{m.summary}</p>}
+            <div className="mb-1 text-[12px] text-fog">Written for this incident · <span style={{ color: 'var(--accent)' }}>{theme.replace(/-/g, ' ')}</span></div>
+            <h1 className="serif truncate text-[26px] font-medium tracking-tight text-bone">{m.station_title}</h1>
           </div>
-          <div className="shrink-0 text-right font-mono text-[10px] text-ash">
-            <div>{comps.length} components{streaming ? ' · streaming' : ''}</div>
-            {run.ttftMs != null && <div>first token {run.ttftMs}ms · {((run.manifestMs || 0) / 1000).toFixed(1)}s total</div>}
+          <div className="shrink-0 text-right text-[12px] tabular-nums text-ash">
+            <div>{comps.length} components{streaming ? ' · writing' : ''}</div>
+            {run.ttftMs != null && <div>first token {run.ttftMs} ms · {((run.manifestMs || 0) / 1000).toFixed(1)} s</div>}
           </div>
         </motion.div>
       )}
@@ -47,7 +75,12 @@ export function Station() {
         <AnimatePresence>
           {comps.map((c, i) => {
             const C = REGISTRY[c.component]
-            return <C key={`${run.runId}-${i}-${c.component}`} spec={c} building={streaming && i === comps.length - 1} />
+            const span2 = ['ThreatHeader', 'SectorMap', 'DispatchConsole'].includes(c.component)
+            return (
+              <div key={`${run.runId}-${i}-${c.component}`} data-card data-component={c.component} className={span2 ? 'xl:col-span-2 [&>section]:h-full' : '[&>section]:h-full'}>
+                <C spec={c} building={streaming && i === comps.length - 1} />
+              </div>
+            )
           })}
         </AnimatePresence>
       </div>
@@ -55,41 +88,45 @@ export function Station() {
   )
 }
 
-const RUNES = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'
+const EXAMPLES: { label: string; incident: () => Promise<any> }[] = [
+  { label: 'a level-5 phantom pinning four engineers in the coffee bar', incident: () => fixture('outbreak-level-5:142') },
+  { label: 'a crowd that only looks like a haunting', incident: () => fixture('control-tick:900') },
+  { label: 'a power cut during the finalist demos', incident: () => preset('loft-power') },
+  { label: 'a checkout outage in us-east-1', incident: () => preset('us-east-1') },
+  { label: 'wildfire smoke over a 300-person afterparty', incident: () => preset('wildfire') },
+]
 
-function Summoning({ idle, phase }: { idle?: boolean; phase?: string }) {
-  const label: Record<string, string> = {
-    routing: 'The Flow is routing the incident…',
-    intel: 'Agents are gathering intel…',
-    deliberating: 'The swarm is deliberating…',
-    deciding: 'The Commander is deciding…',
-    compiling: 'Compiling the interface…',
-    done: 'Run finished without a station.',
-    error: 'The summoning failed.',
-  }
+async function fixture(id: string) {
+  const d = await api<any>('/api/fixtures')
+  return d.fixtures.find((f: any) => f.id === id)?.incident
+}
+async function preset(id: string) {
+  const d = await api<any>('/api/fixtures')
+  const p = d.presets.find((x: any) => x.id === id)
+  return p ? { text: p.text, source: 'reality' } : null
+}
+
+function Idle({ summon }: { summon?: (incident: any) => void }) {
+  const go = async (e: (typeof EXAMPLES)[number]) => { const inc = await e.incident(); if (inc && summon) summon(inc) }
   return (
-    <div className="flex h-full min-h-[520px] flex-col items-center justify-center gap-6 text-center">
-      <div className="relative h-44 w-44">
-        <div className="absolute inset-0 rounded-full border border-[var(--accent)]/30 radar-sweep" style={{ animationDuration: idle ? '24s' : '6s' }}>
-          {RUNES.split('').map((r, i) => (
-            <span key={i} className="absolute left-1/2 top-1/2 font-mono text-[12px] text-[var(--accent)]/60"
-              style={{ transform: `rotate(${(i / RUNES.length) * 360}deg) translateY(-84px)` }}>{r}</span>
+    <div className="flex h-full min-h-[560px] flex-col items-start justify-center px-10">
+      <GhostMark size={52} className="text-bone" />
+      <div className="mt-8 max-w-[600px]">
+        <h2 className="serif text-[42px] font-normal leading-[1.08] tracking-tight text-bone">The war room that builds itself.</h2>
+        <p className="serif mt-6 text-[19px] leading-[1.6] text-ash">
+          Describe an incident. A swarm of agents — each seeing only part of the picture — reads it, checks the live web and
+          argues it out. Then the interface you need is written for you, one component at a time, while you watch.
+        </p>
+        <p className="serif mt-6 text-[19px] leading-[1.75] text-bone">
+          It can handle{' '}
+          {EXAMPLES.map((e, i) => (
+            <span key={e.label}>
+              <button onClick={() => go(e)} className="underline decoration-[var(--hair-2)] decoration-1 underline-offset-4 transition hover:decoration-transparent hover:[background-image:linear-gradient(transparent_62%,var(--beige)_62%)]">{e.label}</button>
+              {i < EXAMPLES.length - 2 ? ', ' : i === EXAMPLES.length - 2 ? ', or ' : '.'}
+            </span>
           ))}
-        </div>
-        <div className="absolute inset-6 rounded-full border border-[var(--accent)]/15" />
-        <div className="absolute inset-0 flex items-center justify-center text-6xl flicker">👻</div>
+        </p>
       </div>
-      {idle ? (
-        <div className="max-w-md">
-          <h2 className="font-display text-3xl font-bold text-bone glow-text">The war room that builds itself</h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-ash">
-            Feed WRAITH an incident — a haunting from the venue feed or a real emergency in plain English. A CrewAI swarm with partial
-            knowledge deliberates, and Parasail streams a bespoke, operable command station into existence, component by component.
-          </p>
-        </div>
-      ) : (
-        <div className="font-mono text-sm text-[var(--accent)] flicker">{label[phase || 'routing']}</div>
-      )}
     </div>
   )
 }
@@ -97,8 +134,8 @@ function Summoning({ idle, phase }: { idle?: boolean; phase?: string }) {
 function DeadStation({ error }: { error: string }) {
   return (
     <div className="flex min-h-[520px] flex-col items-center justify-center gap-4 text-center">
-      <div className="text-6xl grayscale">💀</div>
-      <h2 className="font-display text-2xl font-bold text-[var(--danger)]">No station</h2>
+      <GhostMark size={44} className="text-fog" />
+      <h2 className="serif text-[28px] text-[var(--danger)]">No station</h2>
       <p className="max-w-md font-mono text-[12px] text-ash">{error}</p>
     </div>
   )

@@ -37,10 +37,10 @@ export function Autopilot({ auto, run, start, team, busy }: {
         <div className="panel p-4">
           <div className="panel-title mb-3">track 1 · the exorcism protocol</div>
           <p className="text-[12.5px] leading-relaxed text-ash">The same swarm plays the venue scenario feed over MCP: pull a tick, deliberate with partial knowledge, submit <span className="text-bone">contain / evacuate / observe</span>, and escalate to Discord through One only when the threshold is real.</p>
-          <div className="mt-4 flex rounded-xl border border-white/8 p-1">
+          <div className="mt-4 flex rounded-xl border border-[var(--hair)] p-1">
             {[[true, 'Practice'], [false, 'Live feed']].map(([v, l]) => (
               <button key={String(v)} onClick={() => { setPractice(v as boolean); setArmed(false) }}
-                className={clsx('flex-1 rounded-lg py-1.5 text-[12px]', practice === v ? 'bg-[var(--accent)]/15 text-bone' : 'text-ash')}>{l as string}</button>
+                className={clsx('flex-1 rounded-lg py-1.5 text-[12px]', practice === v ? 'bg-[var(--beige)] text-bone' : 'text-ash')}>{l as string}</button>
             ))}
           </div>
           <div className="mt-2 font-mono text-[10px] leading-relaxed text-fog">
@@ -50,8 +50,8 @@ export function Autopilot({ auto, run, start, team, busy }: {
           <label className="mt-3 flex items-center gap-2 text-[12px] text-ash"><input type="checkbox" checked={dispatch} onChange={(e) => setDispatch(e.target.checked)} className="accent-[var(--accent)]" />auto-dispatch real threats to #loft-incident</label>
           <label className="mt-1.5 flex items-center gap-2 text-[12px] text-ash"><input type="checkbox" checked={compile} onChange={(e) => setCompile(e.target.checked)} className="accent-[var(--accent)]" />also compile a war room per tick (slower)</label>
           <button onClick={go} disabled={busy || (!practice && !team)}
-            className={clsx('mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 font-display text-[12.5px] font-bold tracking-[0.24em]',
-              busy ? 'bg-white/5 text-ash' : armed ? 'animate-pulse bg-[var(--danger)] text-black' : 'bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] text-black')}>
+            className={clsx('mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 serif text-[12.5px] font-bold ',
+              busy ? 'bg-black/[0.04] text-ash' : armed ? 'animate-pulse bg-[var(--danger)] text-white' : 'bg-[var(--ink)] text-white')}>
             {auto.running ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
             {auto.running ? 'SWARM RUNNING' : armed ? 'CONFIRM LIVE RUN' : practice ? 'RUN PRACTICE' : 'RUN LIVE FEED'}
           </button>
@@ -91,16 +91,16 @@ export function Autopilot({ auto, run, start, team, busy }: {
                 ))}
               </div>
               {r.action && (
-                <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-white/5 pt-3">
-                  <span className="font-display text-lg font-bold" style={{ color: r.action === 'evacuate' ? 'var(--danger)' : r.action === 'contain' ? 'var(--warn)' : 'var(--ok)' }}>{r.action.toUpperCase()}</span>
+                <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-[var(--hair)] pt-3">
+                  <span className="serif text-lg font-bold" style={{ color: r.action === 'evacuate' ? 'var(--danger)' : r.action === 'contain' ? 'var(--warn)' : 'var(--ok)' }}>{r.action.toUpperCase()}</span>
                   {r.decision?.rationale && <span className="min-w-0 flex-1 text-[12px] text-ash">{r.decision.rationale}</span>}
                 </div>
               )}
               {j && (
                 <div className="mt-2 flex flex-wrap gap-2 font-mono text-[10.5px]">
                   {j.queued ? <span className="text-[var(--warn)]">queued for replay: {j.error}</span> : <>
-                    <span className="rounded bg-white/5 px-2 py-0.5">score <b className="text-bone">{j.score ?? '—'}</b></span>
-                    {j.expected && <span className="rounded bg-white/5 px-2 py-0.5">expected <b className="text-bone">{j.expected}</b></span>}
+                    <span className="rounded bg-black/[0.04] px-2 py-0.5">score <b className="text-bone">{j.score ?? '—'}</b></span>
+                    {j.expected && <span className="rounded bg-black/[0.04] px-2 py-0.5">expected <b className="text-bone">{j.expected}</b></span>}
                     <span className={clsx('rounded px-2 py-0.5', j.false_alarm ? 'bg-[var(--danger)]/15 text-[var(--danger)]' : 'bg-[var(--ok)]/10 text-[var(--ok)]')}>{j.false_alarm ? 'FALSE ALARM' : 'no false alarm'}</span>
                     {j.referee && <span className="text-fog">{j.referee}</span>}
                     {j.expectation_source && <span className="text-fog">referee: {j.expectation_source}</span>}
@@ -129,7 +129,7 @@ export function Autopilot({ auto, run, start, team, busy }: {
           {boardErr && <div className="text-[11px] text-[var(--danger)]">{boardErr}</div>}
           {teams.length === 0 && !boardErr && <div className="font-mono text-[11px] text-fog">no submissions yet</div>}
           {teams.map((t: any, i: number) => (
-            <div key={t.team || i} className={clsx('mb-1.5 flex items-center gap-2 rounded-lg px-2.5 py-2 font-mono text-[11px]', t.team === team ? 'border border-[var(--accent)]/50 bg-[var(--accent)]/10' : 'bg-white/[0.02]')}>
+            <div key={t.team || i} className={clsx('mb-1.5 flex items-center gap-2 rounded-lg px-2.5 py-2 font-mono text-[11px]', t.team === team ? 'border border-[var(--hair-2)] bg-[var(--beige)]' : 'bg-[var(--sunk)]')}>
               <span className="w-5 text-fog">{i + 1}</span>
               <span className="flex-1 truncate text-bone">{t.team}</span>
               <span className="text-[var(--accent)]">{t.total_score ?? t.score ?? t.total ?? '—'}</span>

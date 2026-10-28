@@ -6,38 +6,33 @@ import type { ComponentSpec } from '../../lib/types'
 export function Frame({ spec, building, children, className, span }: {
   spec: ComponentSpec; building?: boolean; children: ReactNode; className?: string; span?: 1 | 2
 }) {
+  void span
   const { provenance } = useStation()
   const src = spec.source || 'commander'
-  const color = SOURCE_COLORS[src] || '#a78bfa'
+  const color = SOURCE_COLORS[src] || '#161615'
   return (
     <section
-      className={clsx('panel materialize relative flex flex-col', building && 'building', span === 2 && 'xl:col-span-2', className)}
-      style={provenance ? { borderColor: color, boxShadow: `0 0 0 1px ${color}55, 0 0 32px -10px ${color}` } : undefined}
+      className={clsx('panel materialize relative flex flex-col', building && 'building', className)}
+      style={provenance ? { borderColor: color, boxShadow: `inset 3px 0 0 ${color}` } : undefined}
     >
-      <header className="flex items-center justify-between gap-2 px-4 pt-3">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="panel-title truncate">{spec.title || spec.component}</span>
-          {building && <span className="font-mono text-[10px] text-[var(--accent)] flicker">compiling…</span>}
-        </div>
-        <span
-          title={`${AGENT_META[src]?.name}: ${AGENT_META[src]?.role}${spec.why ? ` — ${spec.why}` : ''}`}
-          className="shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-wider"
-          style={{ color, borderColor: `${color}55`, background: `${color}12` }}
-        >
-          {AGENT_META[src]?.glyph} {src}
+      <header className="flex items-baseline justify-between gap-3 px-5 pt-4">
+        <span className="truncate text-[12.5px] font-medium text-ash">{spec.title || spec.component}</span>
+        <span title={`${AGENT_META[src]?.name}: ${AGENT_META[src]?.role}${spec.why ? ` — ${spec.why}` : ''}`}
+          className="serif shrink-0 text-[11.5px] italic" style={{ color }}>
+          {building ? 'composing…' : `via ${AGENT_META[src]?.name.toLowerCase()}`}
         </span>
       </header>
-      {provenance && spec.why && <div className="px-4 pt-1 font-mono text-[10px] text-ash">why: {spec.why}</div>}
-      <div className="flex-1 px-4 pb-4 pt-3">{children}</div>
+      {provenance && spec.why && <div className="serif px-5 pt-1 text-[12px] italic text-fog">{spec.why}</div>}
+      <div className="flex-1 px-5 pb-5 pt-3">{children}</div>
     </section>
   )
 }
 
-export function Meter({ value, color = 'var(--accent)', height = 6 }: { value: number; color?: string; height?: number }) {
+export function Meter({ value, color = 'var(--accent)', height = 4 }: { value: number; color?: string; height?: number }) {
   const v = Math.max(0, Math.min(1, value || 0))
   return (
-    <div className="w-full overflow-hidden rounded-full bg-white/5" style={{ height }}>
-      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${v * 100}%`, background: color, boxShadow: `0 0 12px ${color}` }} />
+    <div className="w-full overflow-hidden rounded-full bg-black/[0.06]" style={{ height }}>
+      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${v * 100}%`, background: color }} />
     </div>
   )
 }

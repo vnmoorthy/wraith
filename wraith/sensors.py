@@ -59,6 +59,18 @@ def readings_from_text(text: str) -> dict:
     return out
 
 
+def series_from_text(text: str) -> list[dict]:
+    """Pull comma-separated metric series out of an alert, e.g. `5xx_rate_pct 0.3,0.2,11.8,23.5`."""
+    import re
+    out = []
+    for m in re.finditer(r"(\b[A-Za-z0-9][\w%.-]{1,30})[ :=]+((?:-?\d+(?:\.\d+)?\s*,\s*){3,}-?\d+(?:\.\d+)?)", text):
+        values = [float(v) for v in re.split(r"\s*,\s*", m.group(2))]
+        base = sum(values[: max(1, len(values) // 2)]) / max(1, len(values) // 2)
+        out.append({"metric": m.group(1), "values": values, "baseline": round(base, 2), "latest": values[-1],
+                    "x_baseline": round(values[-1] / base, 1) if base else None})
+    return out[:4]
+
+
 def score_tick(tick: dict, previous_tick: dict | None = None) -> list[dict]:
     prev = {r.get("sector"): r for r in (previous_tick or {}).get("sector_reports", [])}
     return [score_sector(r, prev.get(r.get("sector"))) for r in tick.get("sector_reports", [])]

@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import re
 import time
 import uuid
 from typing import Any
@@ -116,7 +117,8 @@ async def _kick(run: Run, role: str, agent: Agent, prompt: str, model_cls):
     t0 = time.perf_counter()
     run.calls["crewai"] += 1
     try:
-        out = await agent.kickoff_async(prompt, response_format=model_cls)
+        budget = 25 if role == "Commander" else 18
+        out = await asyncio.wait_for(agent.kickoff_async(prompt, response_format=model_cls), timeout=budget)
         brief = getattr(out, "pydantic", None)
         data = brief.model_dump() if brief is not None else model_cls.model_validate(parasail.parse_json(out.raw)).model_dump()
         data = json.loads(parasail.clean(json.dumps(data, ensure_ascii=False)))
@@ -149,6 +151,15 @@ Elsewhere use a short snake_case id (e.g. us_east_1, gate_c, bay_area). verifica
 (under 10 words each) that the live web can answer
 (for hauntings: rule out mundane causes such as current San Francisco weather or a local power/network outage near 525 Market St;
 for real incidents: confirm the incident from news and official status pages)."""
+
+
+def _redact_oracle(text: str | None) -> str | None:
+    """The Archivist is blind to instruments: strip any sensor numbers the oracle echoes back."""
+    if not text or re.search(r"truncated|awaiting full doctrine", text, re.I):
+        return None
+    text = re.sub(r"SENSORS?:[^.\n]*[.\n]?", "", text, flags=re.I)
+    text = re.sub(r"-?\d+(?:\.\d+)?\s*(?:mG|milligauss|°\s*C|C\b|motion(?: events)?)", "[redacted]", text, flags=re.I)
+    return text.strip() or None
 
 
 class WraithFlow(Flow):
@@ -202,10 +213,14 @@ class WraithFlow(Flow):
         async def sentinel_tool():
             if tick:
                 return {"sector_scores": sensors.score_tick(tick, run.incident.get("_previous"))}
-            readings = sensors.readings_from_text(_incident_text(run.incident))
+            text = _incident_text(run.incident)
+            readings = sensors.readings_from_text(text)
             if readings:
                 report = {"sector": route["primary_sector"], "sensors": readings}
                 return {"sector_scores": [sensors.score_sector(report)], "note": "readings extracted from the incident text"}
+            series = sensors.series_from_text(text)
+            if series:
+                return {"sector_scores": [], "series": series, "note": "telemetry series extracted from the alert"}
             return {"sector_scores": [], "note": "no instrument readings in this incident"}
 
         async def archivist_tool():
@@ -221,8 +236,9 @@ class WraithFlow(Flow):
                 # The oracle was asked at intake, in parallel with the router; give it a short grace period.
                 left = max(0.5, 7.5 - (time.perf_counter() - run.t0))
                 try:
-                    oracle = await asyncio.wait_for(asyncio.shield(task), timeout=left)
-                    run.trace("scenario", "hack26-ask-oracle", int((time.perf_counter() - run.t0) * 1000), (oracle or "")[:120])
+                    oracle = _redact_oracle(await asyncio.wait_for(asyncio.shield(task), timeout=left))
+                    run.trace("scenario", "hack26-ask-oracle", int((time.perf_counter() - run.t0) * 1000),
+                              (oracle or "no doctrine in the answer")[:120])
                 except asyncio.TimeoutError:
                     run.trace("scenario", "hack26-ask-oracle", int(left * 1000), "oracle slow: grimoire doctrine used instead", ok=False)
             return {"grimoire": hits, "oracle": oracle}
@@ -295,7 +311,8 @@ class WraithFlow(Flow):
                    swarm_model),
             "You are the Sentinel. You see ONLY instrument data.\n"
             f"SECTOR SCORES (z-scores vs venue baseline, signature 0-1):\n{json.dumps(sent.get('sector_scores'), indent=1)}\n"
-            + ("" if sent.get("sector_scores") else f"No instrument feed. Quantitative signals from the report: {route['key_claims']}\n")
+            + (f"TELEMETRY SERIES (oldest → newest): {json.dumps(sent.get('series'))}\nRead the trend: when did it break, how far from baseline?\n" if sent.get("series") else "")
+            + ("" if sent.get("sector_scores") or sent.get("series") else f"No instrument feed. Quantitative signals from the report: {route['key_claims']}\n")
             + "Motion without EMF or cold is people, not entities. Give your brief.",
             SentinelBrief)
         arch = intel.get("archivist", {})
@@ -349,14 +366,32 @@ class WraithFlow(Flow):
             "Life safety first: an operator's first-hand report of people trapped, pinned or injured is authoritative even when the "
             "web cannot confirm it; web verification shapes cause and scope, never whether to protect people.",
             config.MODEL_COMMANDER, think=True)
-        decision = await _kick(run, "Commander", commander,
-                               f"INCIDENT: {route['headline']} · class {branch} · severity {route['severity_tier']}\n"
-                               f"PRIMARY SECTOR: {route['primary_sector']} · CIVILIANS: {route['civilian_status']} ({route['civilians_at_risk']} at risk)\n"
-                               f"SENTINEL BRIEF: {json.dumps(briefs.get('sentinel'))}\n"
-                               f"ARCHIVIST BRIEF: {json.dumps(briefs.get('archivist'))}\n"
-                               f"VERIFIER BRIEF: {json.dumps(briefs.get('verifier', 'not consulted: control branch'))}\n"
-                               "Decide. countermeasures are grimoire ids from the Archivist brief.",
-                               CommanderDecision)
+        def commander_prompt(verifier_brief) -> str:
+            return (f"INCIDENT: {route['headline']} · class {branch} · severity {route['severity_tier']}\n"
+                    f"PRIMARY SECTOR: {route['primary_sector']} · CIVILIANS: {route['civilian_status']} ({route['civilians_at_risk']} at risk)\n"
+                    f"SENTINEL BRIEF: {json.dumps(briefs.get('sentinel'))}\n"
+                    f"ARCHIVIST BRIEF: {json.dumps(briefs.get('archivist'))}\n"
+                    f"VERIFIER BRIEF: {json.dumps(verifier_brief)}\n"
+                    "Decide. countermeasures are grimoire ids from the Archivist brief.")
+
+        async def counterfactual():
+            """The same Commander, same briefs, but the live web never answered: what would it have decided?"""
+            if branch == "control" or run.off("youcom") or not isinstance(briefs.get("verifier"), dict):
+                return None
+            try:
+                alt = await parasail.chat_json(
+                    [{"role": "system", "content": commander.backstory},
+                     {"role": "user", "content": commander_prompt("unavailable: the live web did not answer") + TERSE}],
+                    schema=CommanderDecision.model_json_schema(), model=config.MODEL_COMMANDER,
+                    schema_name="CommanderDecision", max_tokens=1500)
+                return {"action": alt.get("action"), "confidence": alt.get("confidence"), "rationale": alt.get("rationale")}
+            except Exception:  # noqa: BLE001 - the counterfactual is a bonus, never a blocker
+                return None
+
+        decision, alt = await asyncio.gather(
+            _kick(run, "Commander", commander, commander_prompt(briefs.get("verifier", "not consulted: control branch")),
+                  CommanderDecision),
+            counterfactual())
         if "error" in decision:
             votes = [b.get("recommends") for b in briefs.values() if isinstance(b, dict) and b.get("recommends")]
             action = max(set(votes), key=votes.count) if votes else "observe"
@@ -368,6 +403,9 @@ class WraithFlow(Flow):
             decision["escalate"] = False
         run.state["decision"] = decision
         run.emit({"type": "decision", "decision": decision})
+        if alt:
+            run.state["counterfactual"] = alt
+            run.emit({"type": "counterfactual", "without": "youcom", "decision": alt})
 
     @listen(or_(on_haunting, on_real_world, on_control))
     async def compile(self):

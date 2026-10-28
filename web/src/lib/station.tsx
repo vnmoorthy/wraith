@@ -17,14 +17,15 @@ interface Ctx {
   setOp: (fn: (o: OperatorState) => OperatorState) => void
   xray: boolean
   provenance: boolean
+  summon?: (incident: any) => void
 }
 
 const StationCtx = createContext<Ctx | null>(null)
 
 export const emptyOp = (): OperatorState => ({ countermeasures: [], isolated: [], civilianOverrides: {}, checklist: {}, comms: null, receipts: [] })
 
-export function StationProvider({ run, op, setOp, xray, provenance, children }: Ctx & { children: ReactNode }) {
-  const value = useMemo(() => ({ run, op, setOp, xray, provenance }), [run, op, setOp, xray, provenance])
+export function StationProvider({ run, op, setOp, xray, provenance, summon, children }: Ctx & { children: ReactNode }) {
+  const value = useMemo(() => ({ run, op, setOp, xray, provenance, summon }), [run, op, setOp, xray, provenance, summon])
   return <StationCtx.Provider value={value}>{children}</StationCtx.Provider>
 }
 
@@ -41,11 +42,11 @@ export function useOperator() {
 }
 
 export const SOURCE_COLORS: Record<string, string> = {
-  router: '#c4b5fd',
-  sentinel: '#7dd3fc',
-  archivist: '#f0abfc',
-  verifier: '#86efac',
-  commander: '#fbbf24',
+  router: '#8a6f4d',
+  sentinel: '#2b4e86',
+  archivist: '#7a3e6e',
+  verifier: '#2d6a4a',
+  commander: '#a2650d',
 }
 
 export const AGENT_META: Record<string, { name: string; glyph: string; role: string }> = {
@@ -57,9 +58,9 @@ export const AGENT_META: Record<string, { name: string; glyph: string; role: str
 }
 
 export const PARTNER_META: Record<string, { name: string; color: string; what: string }> = {
-  parasail: { name: 'Parasail', color: '#a78bfa', what: 'inference · streaming · json_schema · embeddings' },
-  youcom: { name: 'You.com', color: '#60a5fa', what: 'live web search (highlights) + contents' },
-  crewai: { name: 'CrewAI', color: '#fb923c', what: 'Flow @router + partial-knowledge agents' },
-  one: { name: 'One', color: '#4ade80', what: 'real actions: Discord #loft-incident' },
-  scenario: { name: 'Feed', color: '#f472b6', what: 'scenario MCP: ticks, oracle, scoreboard' },
+  parasail: { name: 'Parasail', color: '#6d4fc2', what: 'inference · streaming · json_schema · embeddings' },
+  youcom: { name: 'You.com', color: '#2b4e86', what: 'live web search (highlights) + contents' },
+  crewai: { name: 'CrewAI', color: '#c25a1c', what: 'Flow @router + partial-knowledge agents' },
+  one: { name: 'One', color: '#2d6a4a', what: 'real actions: Discord #loft-incident' },
+  scenario: { name: 'Feed', color: '#a33a6b', what: 'scenario MCP: ticks, oracle, scoreboard' },
 }

@@ -24,6 +24,7 @@ ONE_SECRET = env("ONE_SECRET") or env("ONE_API_KEY")
 TEAM_HANDLE = env("TEAM_HANDLE")
 TEAM_TOKEN = env("TEAM_TOKEN")
 DISCORD_CHANNEL_ID = env("DISCORD_CHANNEL_ID", "1564842098740695100")
+DISCORD_GUILD_ID = env("DISCORD_GUILD_ID")  # optional: makes the receipt link open the message
 SCENARIO_MCP = env("SCENARIO_MCP", "https://api.you.com/mcp/halloween-hack-26")
 
 PARASAIL_BASE_URL = env("PARASAIL_BASE_URL", "https://api.parasail.io/v1")
@@ -52,6 +53,7 @@ def fast_body(model: str) -> dict:
 
 
 PORT = int(env("WRAITH_PORT", "8666"))
+HOST = env("WRAITH_HOST", "127.0.0.1")  # set 0.0.0.0 only on a network you trust
 DISPATCH_LIVE = env("WRAITH_DISPATCH_LIVE", "1") not in ("0", "false", "no")
 
 

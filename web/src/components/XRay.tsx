@@ -29,7 +29,7 @@ export function XRay({ run }: { run: RunState }) {
           <span className="font-mono text-[9.5px] text-ash">{run.manifestText.length} chars{run.manifestModel ? ` · ${run.manifestModel}` : ''}</span>
         </div>
         <div className="px-3 pt-1 font-mono text-[9.5px] text-fog">Parasail · stream:true · response_format json_schema (server-enforced)</div>
-        <pre ref={box} className={clsx('m-3 min-h-0 flex-1 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-black/50 p-3 font-mono text-[10.5px] leading-relaxed', streaming && 'caret')}>
+        <pre ref={box} className={clsx('m-3 min-h-0 flex-1 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-[var(--sunk)] p-3 font-mono text-[10.5px] leading-relaxed', streaming && 'caret')}>
           {pretty.length ? pretty.map((p, i) => <span key={i} className={p.c}>{p.t}</span>) : <span className="text-fog">waiting for the compiler…</span>}
         </pre>
       </div>
@@ -42,7 +42,7 @@ export function XRay({ run }: { run: RunState }) {
           {run.traces.map((t, i) => {
             const meta = PARTNER_META[t.partner] || { name: t.partner, color: '#999' }
             return (
-              <div key={i} className="mb-1.5 rounded-md bg-white/[0.02] px-2 py-1.5 font-mono text-[10px]">
+              <div key={i} className="mb-1.5 rounded-md bg-[var(--sunk)] px-2 py-1.5 font-mono text-[10px]">
                 <div className="flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.ok ? meta.color : 'var(--danger)' }} />
                   <span style={{ color: meta.color }}>{meta.name}</span>
@@ -67,7 +67,7 @@ export function Timeline({ run }: { run: RunState }) {
   return (
     <div ref={box} className="flex items-center gap-2 overflow-x-auto px-1 py-1">
       {run.timeline.map((e, i) => (
-        <div key={i} className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/5 bg-white/[0.02] px-2.5 py-1 font-mono text-[10px]">
+        <div key={i} className="flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--hair)] bg-[var(--sunk)] px-2.5 py-1 font-mono text-[10px]">
           <span className="text-fog">{(e.t / 1000).toFixed(1)}s</span>
           <span style={{ color: color[e.tone] || 'var(--info)' }}>{e.label}</span>
         </div>

@@ -14,6 +14,8 @@ export interface RunState {
   oracle?: string | null
   sectorScores: any[]
   decision?: Decision
+  counterfactual?: { action: string; confidence?: number; rationale?: string } | null
+  dispatch?: any
   manifestText: string
   manifest: Manifest
   manifestDone: boolean
@@ -117,6 +119,16 @@ export function reduce(prev: RunState, e: WraithEvent): RunState {
     case 'decision': {
       s.decision = e.decision
       tl(s, e.t, `Commander: ${e.decision.action.toUpperCase()} (${Math.round(e.decision.confidence * 100)}%)`, 'accent')
+      return s
+    }
+    case 'counterfactual': {
+      s.counterfactual = e.decision
+      tl(s, e.t, `Without You.com the commander would say ${e.decision?.action}`, 'info')
+      return s
+    }
+    case 'dispatch': {
+      s.dispatch = { ...e.receipt, content: e.content }
+      tl(s, e.t, e.receipt?.ok ? 'Dispatched through One' : 'One: dispatch pending', e.receipt?.ok ? 'ok' : 'info')
       return s
     }
     case 'manifest.start': {

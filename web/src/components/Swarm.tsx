@@ -28,47 +28,42 @@ function Lane({ k, run }: { k: AgentKey; run: RunState }) {
   useEffect(() => { if (box.current) box.current.scrollTop = box.current.scrollHeight }, [l.tokens])
   const skipped = run.phase !== 'idle' && l.status === 'idle' && (run.phase === 'done' || run.phase === 'compiling')
   return (
-    <div className={clsx('rounded-xl border p-2.5 transition-all', l.status === 'thinking' ? 'border-white/15 bg-white/[0.03]' : 'border-white/5 bg-white/[0.012]', skipped && 'opacity-40')}
-      style={l.status === 'thinking' ? { boxShadow: `0 0 28px -12px ${color}` } : undefined}>
-      <div className="flex items-center gap-2">
-        <span className="flex h-6 w-6 items-center justify-center rounded-lg text-[13px]" style={{ background: `${color}18`, color }}>{meta.glyph}</span>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[12.5px] font-semibold text-bone">{meta.name}</span>
-            {l.model && <span className="truncate font-mono text-[9px] text-fog">{l.model}</span>}
-          </div>
-          <div className="truncate font-mono text-[9.5px] text-ash">{meta.role}</div>
-        </div>
-        <span className="shrink-0">
-          {l.status === 'thinking' && <Loader2 size={13} className="animate-spin" style={{ color }} />}
-          {l.status === 'done' && <span className="flex items-center gap-1 font-mono text-[9.5px] text-[var(--ok)]"><Check size={12} />{l.ms ? `${(l.ms / 1000).toFixed(1)}s` : ''}</span>}
-          {l.status === 'error' && <X size={13} className="text-[var(--danger)]" />}
-          {skipped && <span className="font-mono text-[9px] text-fog">not routed</span>}
+    <div className={clsx('border-t border-[var(--hair)] py-3 transition-opacity first:border-t-0', skipped && 'opacity-35')}>
+      <div className="flex items-baseline gap-2">
+        <span className="h-2 w-2 shrink-0 translate-y-[-1px] rounded-full" style={{ background: l.status === 'idle' ? '#dcd8d0' : color }} />
+        <span className="text-[14px] font-medium text-bone">{meta.name}</span>
+        <span className="serif min-w-0 flex-1 truncate text-[12.5px] italic text-fog">{meta.role}</span>
+        <span className="shrink-0 text-[11.5px] tabular-nums">
+          {l.status === 'thinking' && <Loader2 size={12} className="animate-spin" style={{ color }} />}
+          {l.status === 'done' && <span className="flex items-center gap-1 text-[var(--ok)]"><Check size={12} />{l.ms ? `${(l.ms / 1000).toFixed(1)}s` : ''}</span>}
+          {l.status === 'error' && <X size={12} className="text-[var(--danger)]" />}
+          {skipped && <span className="text-fog">not routed</span>}
         </span>
       </div>
       {(l.knows || l.blind) && l.status !== 'idle' && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {l.knows?.map((x) => <span key={x} className="rounded px-1.5 py-0.5 font-mono text-[9px]" style={{ background: `${color}14`, color }}>{x}</span>)}
-          {l.blind?.map((x) => <span key={x} className="rounded bg-white/[0.03] px-1.5 py-0.5 font-mono text-[9px] text-fog line-through decoration-fog/60">{x}</span>)}
+        <div className="mt-1.5 pl-4 text-[11.5px] leading-relaxed text-ash">
+          <span className="text-fog">sees </span>{l.knows?.join(', ')}
+          {l.blind?.length ? <><span className="text-fog"> · blind to </span><span className="line-through decoration-[#c9c5bc]">{l.blind.join(', ')}</span></> : null}
         </div>
       )}
       {l.status === 'thinking' && l.tokens && (
-        <div ref={box} className="caret mt-2 max-h-16 overflow-hidden break-all font-mono text-[10px] leading-snug text-ash">{l.tokens.slice(-260)}</div>
+        <div ref={box} className="caret mt-1.5 max-h-14 overflow-hidden break-all pl-4 font-mono text-[10.5px] leading-snug text-fog">{l.tokens.slice(-220)}</div>
       )}
-      {l.status === 'thinking' && !l.tokens && <div className="mt-2 font-mono text-[10px] text-fog flicker">{l.tool || (k === 'router' ? 'classifying…' : 'thinking with partial knowledge…')}</div>}
+      {l.status === 'thinking' && !l.tokens && <div className="serif mt-1.5 pl-4 text-[13px] italic text-ash flicker">{l.tool || (k === 'router' ? 'reading the incident…' : 'thinking with partial knowledge…')}</div>}
       {(l.status === 'done' || l.status === 'error') && l.brief && (
-        <div className={clsx('mt-2 text-[11px] leading-snug', l.status === 'error' ? 'text-[var(--danger)]' : 'text-bone/85')}>{summary(k, l.brief)}</div>
+        <div className={clsx('serif mt-1.5 pl-4 text-[14px] leading-snug', l.status === 'error' ? 'text-[var(--danger)]' : 'text-bone')}>{summary(k, l.brief)}</div>
       )}
+      {l.model && l.status !== 'idle' && <div className="mt-1 pl-4 font-mono text-[10px] text-[#b5b2ab]">{l.model}</div>}
     </div>
   )
 }
 
 export function SwarmPanel({ run }: { run: RunState }) {
   return (
-    <div className="panel flex flex-col gap-2 p-3">
-      <div className="flex items-center justify-between">
-        <span className="panel-title">the swarm · crewai flow</span>
-        {run.branch && <span className="rounded bg-[var(--accent)]/12 px-1.5 py-0.5 font-mono text-[9.5px] text-[var(--accent)]">branch: {run.branch}</span>}
+    <div className="panel flex flex-col px-4 pb-1 pt-3">
+      <div className="flex items-baseline justify-between pb-1">
+        <span className="text-[12.5px] font-medium text-ash">The swarm</span>
+        {run.branch ? <span className="serif text-[13px] italic text-bone">routed to <span className="hl">{run.branch.replace('_', ' ')}</span></span> : <span className="serif text-[12.5px] italic text-fog">CrewAI Flow</span>}
       </div>
       {ORDER.map((k) => <Lane key={k} k={k} run={run} />)}
     </div>

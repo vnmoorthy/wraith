@@ -65,44 +65,68 @@ export function DispatchConsole({ spec, building }: { spec: ComponentSpec; build
     }
   }
 
-  const last = op.receipts[0]
+  const last = op.receipts[0] || run.dispatch
   return (
-    <Frame spec={spec} building={building} span={2} className={clsx(!hold && 'ring-1 ring-[var(--accent)]/30')}>
-      <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
+    <Frame spec={spec} building={building} span={2}>
+      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
         <div className="min-w-0">
-          <div className="mb-2 flex flex-wrap items-center gap-2 font-mono text-[11px]">
-            <Radio size={13} className="text-[#4ade80]" />
-            <span className="text-bone">{p.channel || '#loft-incident'}</span>
-            <span className="text-fog">via One · discord · execute_one_action</span>
-            <span className={clsx('ml-auto rounded px-1.5 py-0.5 text-[10px] font-bold uppercase', urgency === 'flash' ? 'bg-[var(--danger)]/15 text-[var(--danger)]' : hold ? 'bg-white/5 text-ash' : 'bg-[var(--warn)]/15 text-[var(--warn)]')}>{urgency}</span>
+          <div className="mb-3 flex flex-wrap items-baseline gap-2 text-[12.5px]">
+            <Radio size={13} className="translate-y-[2px] text-[var(--ok)]" />
+            <span className="text-bone">To {p.channel || '#loft-incident'}</span>
+            <span className="text-fog">· via One → Discord</span>
+            <span className="serif ml-auto text-[13px] italic" style={{ color: urgency === 'flash' ? 'var(--danger)' : hold ? 'var(--ok)' : 'var(--warn)' }}>{urgency}</span>
           </div>
-          <pre className="max-h-44 overflow-auto whitespace-pre-wrap rounded-xl border border-white/8 bg-black/40 p-3 font-mono text-[11.5px] leading-relaxed text-[#d9f99d]">{preview || '…building payload from station state'}</pre>
-          <div className="mt-1.5 font-mono text-[10px] text-fog">payload is rebuilt live from what you select on this station — countermeasures, isolated sectors, civilians, checklist</div>
+          <div className="serif max-h-48 overflow-auto whitespace-pre-wrap border-l border-[var(--hair-2)] pl-4 text-[15px] leading-[1.6] text-bone">{preview || 'Writing the message from what you have done on this station…'}</div>
+          <div className="mt-2 text-[11.5px] text-fog">Rewritten live from your choices on this station: countermeasures, isolated sectors, civilians, protocol.</div>
         </div>
-        <div className="flex flex-col justify-between gap-3">
-          {hold && <div className="rounded-lg border border-[var(--ok)]/30 bg-[var(--ok)]/5 p-2 text-[11.5px] text-[var(--ok)]">Commander says hold: escalating this would be a false alarm. You can still send manually.</div>}
-          <label className="flex items-center gap-2 font-mono text-[11px] text-ash">
-            <input type="checkbox" checked={dry} onChange={(e) => setDry(e.target.checked)} className="accent-[var(--accent)]" /> dry run (One builds the request, does not send)
+        <div className="flex flex-col gap-3">
+          {hold && <div className="serif text-[14px] italic text-[var(--ok)]">The commander says hold. Sending this would be a false alarm.</div>}
+          <label className="flex items-center gap-2 text-[12px] text-ash">
+            <input type="checkbox" checked={dry} onChange={(e) => setDry(e.target.checked)} className="accent-[var(--ink)]" /> Dry run (One builds the request, does not send)
           </label>
           <button onClick={fire} disabled={state === 'sending' || oneOff}
-            className={clsx('flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-display text-sm font-bold tracking-[0.2em] transition-all',
-              oneOff ? 'bg-white/5 text-fog' :
-              state === 'armed' ? 'animate-pulse bg-[var(--danger)] text-black shadow-[0_0_40px_-6px_var(--danger)]' :
-              'bg-[var(--accent)] text-black shadow-[0_0_30px_-8px_var(--accent)] hover:brightness-110')}>
+            className={clsx('flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-[14.5px] font-medium transition-all',
+              oneOff ? 'bg-black/[0.04] text-fog' :
+              state === 'armed' ? 'bg-[var(--danger)] text-white' :
+              'bg-[var(--ink)] text-white hover:bg-black')}>
             {state === 'sending' ? <Loader2 size={16} className="animate-spin" /> : <Send size={15} />}
-            {oneOff ? 'ONE OFFLINE' : state === 'armed' ? 'CONFIRM DISPATCH' : state === 'sending' ? 'DISPATCHING' : 'DISPATCH'}
+            {oneOff ? 'One is switched off' : state === 'armed' ? 'Confirm: send to Discord' : state === 'sending' ? 'Sending through One…' : 'Dispatch'}
           </button>
-          {state === 'armed' && <button onClick={() => setState('idle')} className="font-mono text-[10px] text-ash hover:text-bone">cancel</button>}
-          {err && <div className="flex items-start gap-1.5 text-[11px] text-[var(--danger)]"><XCircle size={13} className="mt-0.5 shrink-0" />{err}</div>}
-          {last && (
-            <div className="rounded-lg border border-[var(--ok)]/30 bg-[var(--ok)]/5 p-2 font-mono text-[10.5px] text-[var(--ok)]">
-              <div className="flex items-center gap-1 font-bold"><CheckCircle2 size={12} /> {last.dry_run ? 'DRY RUN OK' : 'DELIVERED'} · {last.at}</div>
-              {last.message_id && <div className="truncate text-bone/80">message {last.message_id}</div>}
-              <div className="truncate text-ash">{last.action_title || last.action_id} · {last.latency_ms}ms</div>
-            </div>
-          )}
+          {state === 'armed' && <button onClick={() => setState('idle')} className="text-[12px] text-ash hover:text-bone">cancel</button>}
+          {err && <div className="flex items-start gap-1.5 text-[12px] text-[var(--danger)]"><XCircle size={13} className="mt-0.5 shrink-0" />{err}</div>}
+          {last && <Ladder receipt={last} />}
         </div>
       </div>
     </Frame>
+  )
+}
+
+const TOOLS = ['list_one_integrations', 'find_one_actions', 'execute_one_action']
+
+/** One's three-tool loop, step by step, with what each step returned. */
+function Ladder({ receipt }: { receipt: any }) {
+  const steps: any[] = receipt.steps || []
+  return (
+    <div className="text-[12px]">
+      <div className="mb-1.5 flex items-center gap-1.5 font-medium" style={{ color: receipt.ok ? 'var(--ok)' : receipt.pending ? 'var(--warn)' : 'var(--danger)' }}>
+        {receipt.ok ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
+        {receipt.ok ? (receipt.dry_run ? 'Built by One, not sent (dry run)' : 'Delivered to Discord') : receipt.pending ? 'Ready — Discord not connected in One yet' : 'One could not send it'}
+      </div>
+      <ol className="flex flex-col gap-1">
+        {TOOLS.map((tool, i) => {
+          const st = steps.find((x) => x.tool === tool)
+          const done = !!st && st.ok !== false
+          return (
+            <li key={tool} className="flex items-baseline gap-2">
+              <span className="serif w-4 text-fog">{i + 1}.</span>
+              <span className={clsx('font-mono text-[11px]', done ? 'text-bone' : 'text-fog')}>{tool}</span>
+              <span className="ml-auto shrink-0 tabular-nums text-fog">{st ? `${st.ms} ms${st.cached ? ' · cached' : ''}` : receipt.pending && i === 2 ? 'pending' : ''}</span>
+            </li>
+          )
+        })}
+      </ol>
+      {steps.map((st) => st.detail && <div key={st.tool} className="mt-1 truncate pl-6 text-[11px] text-fog" title={st.detail}>{st.detail}</div>)}
+      {receipt.jump_url && <a href={receipt.jump_url} target="_blank" rel="noreferrer" className="mt-1 inline-block pl-6 text-[12px] underline decoration-[var(--hair-2)] underline-offset-4">Open in Discord ↗</a>}
+    </div>
   )
 }

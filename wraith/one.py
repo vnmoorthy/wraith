@@ -136,20 +136,27 @@ def _first_action(node) -> dict | None:
     return None
 
 
-async def resolve_discord() -> dict:
-    """Resolve (once) the Discord connection and the send-message action, through One."""
+async def resolve_discord(steps: list | None = None) -> dict:
+    """Resolve the Discord connection and the send-message action through One (cached after the first time)."""
+    steps = steps if steps is not None else []
     if _resolved.get("discord"):
+        steps.extend({**st, "cached": True} for st in _resolved["discord_steps"])
         return _resolved["discord"]
     t0 = time.perf_counter()
     conns = [c for c in await list_integrations() if c["platform"] == "discord" and c.get("state") in (None, "operational")]
-    if not conns:
-        raise OneError("Discord is not connected in One. Connect it at app.withone.ai (write access) and retry")
+    steps.append({"tool": "list_one_integrations", "ms": int((time.perf_counter() - t0) * 1000),
+                  "detail": f"{len(conns)} Discord connection{'s' if len(conns) != 1 else ''}"})
+    t1 = time.perf_counter()
     action = await find_action("discord", "send a message to a channel",
                                "post a containment alert to the venue incident channel")
+    steps.append({"tool": "find_one_actions", "ms": int((time.perf_counter() - t1) * 1000),
+                  "detail": f"{action.get('title') or 'no action'} · {action.get('method')} {action.get('path')}"})
     if not action["action_id"]:
         raise OneError("One did not return a Discord send-message action")
-    _resolved["discord"] = {"connection_key": conns[0]["key"], **action,
-                            "resolve_ms": int((time.perf_counter() - t0) * 1000)}
+    if not conns:
+        raise OneError("Discord is not connected in One yet: the request is built, connect Discord at app.withone.ai to send it")
+    _resolved["discord"] = {"connection_key": conns[0]["key"], **action}
+    _resolved["discord_steps"] = [dict(st) for st in steps]
     return _resolved["discord"]
 
 
@@ -159,25 +166,32 @@ def _path_var_name(action: dict) -> str:
 
 
 async def dispatch_discord(content: str, dry_run: bool = False) -> dict:
-    """Tool 3 of 3: execute. Posts `content` to the venue channel and returns a receipt."""
-    d = await resolve_discord()
+    """The three-tool loop, timed step by step. Never raises: a missing connection comes back as `pending`."""
+    steps: list = []
+    try:
+        d = await resolve_discord(steps)
+    except OneError as exc:
+        return {"ok": False, "pending": True, "error": str(exc), "steps": steps, "channel_id": config.DISCORD_CHANNEL_ID}
     t0 = time.perf_counter()
     args = ["actions", "execute", "discord", d["action_id"], d["connection_key"],
             "--path-vars", json.dumps({_path_var_name(d): config.DISCORD_CHANNEL_ID}),
             "-d", json.dumps({"content": content[:1900]})]
     if dry_run:
         args.append("--dry-run")
-    res = await cli(*args, timeout=60)
+    try:
+        res = await cli(*args, timeout=60)
+    except OneError as exc:
+        steps.append({"tool": "execute_one_action", "ms": int((time.perf_counter() - t0) * 1000), "detail": str(exc)[:160], "ok": False})
+        return {"ok": False, "error": str(exc), "steps": steps, "channel_id": config.DISCORD_CHANNEL_ID}
     body = res.get("data", res) if isinstance(res, dict) else res
     msg_id = (body or {}).get("id") if isinstance(body, dict) else None
+    ms = int((time.perf_counter() - t0) * 1000)
+    steps.append({"tool": "execute_one_action", "ms": ms,
+                  "detail": ("dry run: request built, not sent" if dry_run else f"message {msg_id}") if (msg_id or dry_run) else "no message id returned"})
     return {
-        "ok": bool(msg_id) or dry_run,
-        "dry_run": dry_run,
-        "message_id": msg_id,
-        "channel_id": config.DISCORD_CHANNEL_ID,
-        "action_id": d["action_id"],
-        "action_title": d.get("title"),
-        "latency_ms": int((time.perf_counter() - t0) * 1000),
-        "jump_url": f"https://discord.com/channels/@me/{config.DISCORD_CHANNEL_ID}/{msg_id}" if msg_id else None,
+        "ok": bool(msg_id) or dry_run, "dry_run": dry_run, "message_id": msg_id, "channel_id": config.DISCORD_CHANNEL_ID,
+        "action_id": d["action_id"], "action_title": d.get("title"), "latency_ms": ms, "steps": steps,
+        "jump_url": (f"https://discord.com/channels/{config.DISCORD_GUILD_ID}/{config.DISCORD_CHANNEL_ID}/{msg_id}"
+                     if msg_id and config.DISCORD_GUILD_ID else None),
         "raw": _redact(json.dumps(body)[:600]),
     }

@@ -16,20 +16,20 @@ export function Replays({ onReplay }: { onReplay: (id: string, speed: number) =>
       <div className="panel flex items-center gap-4 p-5">
         <Film className="text-[var(--accent)]" />
         <div className="flex-1">
-          <h2 className="font-display text-xl font-bold text-bone">Replays</h2>
+          <h2 className="serif text-xl font-bold text-bone">Replays</h2>
           <p className="text-[12.5px] text-ash">Every summoning is recorded event by event — agent tokens, partner calls, the manifest stream. Replays re-run that exact stream with its original timing and are always labelled REPLAY. They also work fully offline.</p>
         </div>
-        <div className="flex items-center gap-1 rounded-lg border border-white/8 p-1 font-mono text-[11px]">
-          {[1, 2, 4].map((s) => <button key={s} onClick={() => setSpeed(s)} className={clsx('rounded px-2 py-1', speed === s ? 'bg-[var(--accent)]/15 text-bone' : 'text-ash')}>{s}×</button>)}
+        <div className="flex items-center gap-1 rounded-lg border border-[var(--hair)] p-1 font-mono text-[11px]">
+          {[1, 2, 4].map((s) => <button key={s} onClick={() => setSpeed(s)} className={clsx('rounded px-2 py-1', speed === s ? 'bg-[var(--beige)] text-bone' : 'text-ash')}>{s}×</button>)}
         </div>
         <button onClick={load} className="text-ash hover:text-bone"><RefreshCw size={15} /></button>
       </div>
       {err && <div className="text-[12px] text-[var(--danger)]">{err}</div>}
       <div className="grid gap-3 md:grid-cols-2">
         {runs.map((r) => (
-          <button key={r.id} onClick={() => onReplay(r.id, speed)} className="panel group p-4 text-left transition hover:border-[var(--accent)]/60">
+          <button key={r.id} onClick={() => onReplay(r.id, speed)} className="panel group p-4 text-left transition hover:border-[var(--hair-2)]">
             <div className="flex items-center justify-between font-mono text-[10px]">
-              <span className={clsx('rounded px-1.5 py-0.5 uppercase', r.recorded ? 'bg-[var(--warn)]/12 text-[var(--warn)]' : 'bg-white/5 text-ash')}>{r.recorded ? 'shipped recording' : r.mode}</span>
+              <span className={clsx('rounded px-1.5 py-0.5 uppercase', r.recorded ? 'bg-[var(--warn)]/12 text-[var(--warn)]' : 'bg-black/[0.04] text-ash')}>{r.recorded ? 'shipped recording' : r.mode}</span>
               <span className="text-fog">{r.id}</span>
             </div>
             <div className="mt-2 line-clamp-2 text-[14px] font-semibold text-bone">{r.headline || 'untitled incident'}</div>

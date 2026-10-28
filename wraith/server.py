@@ -23,9 +23,10 @@ REALITY_PRESETS = [
     {"id": "loft-power", "label": "Power fails during demos",
      "text": "Power just failed across the 2nd floor of the AWS Builder Loft at 525 Market St during finalist demos. Emergency lights only, "
              "elevators stopped, roughly 120 attendees, two people reported stuck in the south-east stairwell, Wi-Fi down."},
-    {"id": "us-east-1", "label": "AWS us-east-1 degradation",
-     "text": "Our checkout API is failing: elevated 5xx errors and timeouts from services hosted in AWS us-east-1. "
-             "Customers in North America cannot pay. Is AWS having an incident right now, and what should the on-call team do?"},
+    {"id": "us-east-1", "label": "Is it us or AWS?",
+     "text": "PagerDuty P1 09:14 checkout-api. 5xx_rate_pct 0.3,0.2,0.4,0.3,11.8,23.5 · p99_ms 180,175,190,2400,8100 · "
+             "deploy v2.41.0 rolled out at 09:12 · region us-east-1 · North American customers cannot pay. "
+             "Is AWS having an incident right now, or did we break it? What should on-call do?"},
     {"id": "wildfire", "label": "Wildfire smoke over the Bay",
      "text": "Heavy wildfire smoke is drifting over the San Francisco Bay Area. Event organizers at 525 Market St want to know whether to "
              "move 300 people indoors, cancel the outdoor afterparty, and what the current air quality is."},
@@ -51,10 +52,16 @@ async def _startup():
 
 
 async def _warm():
+    """Pay every cold start before the demo does: grimoire, embeddings, each routed model, the oracle."""
     try:
         await grimoire.build()
+        await grimoire.search("warm up", k=1)
     except Exception as exc:  # noqa: BLE001
         print(f"[wraith] grimoire not built yet: {exc}")
+    models = {config.MODEL_ROUTER, config.MODEL_SWARM, config.MODEL_VERIFIER, config.MODEL_COMMANDER, config.MODEL_COMPILER}
+    await asyncio.gather(*(parasail.chat([{"role": "user", "content": "ok"}], model=m, max_tokens=4) for m in models),
+                         scenario.oracle("ping"), return_exceptions=True)
+    print("[wraith] warm: grimoire, embeddings, models, oracle", flush=True)
 
 
 @app.get("/api/status")
@@ -165,11 +172,25 @@ async def dispatch(b: DispatchBody):
     if b.one_disabled:
         raise HTTPException(409, "One is ablated: the station can see the threat but cannot act on it")
     content = build_dispatch(b)
-    try:
-        receipt = await one.dispatch_discord(content, dry_run=b.dry_run or not config.DISPATCH_LIVE)
-    except one.OneError as exc:
-        raise HTTPException(502, str(exc)) from exc
+    receipt = await one.dispatch_discord(content, dry_run=b.dry_run or not config.DISPATCH_LIVE)
+    _append_to_run(b.run_id, {"type": "dispatch", "content": content, "receipt": receipt})
     return {"content": content, "receipt": receipt}
+
+
+def _append_to_run(run_id: str | None, event: dict) -> None:
+    """Dispatches happen after the run; append them so replays include the One loop too."""
+    if not run_id:
+        return
+    path = RUNS_DIR / f"{run_id}.json"
+    if not path.exists():
+        return
+    try:
+        data = json.loads(path.read_text())
+        last_t = (data.get("events") or [{}])[-1].get("t", 0)
+        data["events"].append({**event, "run_id": run_id, "t": last_t + 1500})
+        path.write_text(json.dumps(data, default=str))
+    except (OSError, json.JSONDecodeError):
+        pass
 
 
 @app.get("/api/one/integrations")
@@ -371,8 +392,10 @@ if STATIC.exists():
 
     @app.get("/{path:path}")
     async def spa(path: str):
-        target = STATIC / path
-        if path and target.is_file():
+        # Only ever serve files that resolve inside the built UI: no traversal to .env or the repo.
+        root = STATIC.resolve()
+        target = (STATIC / path).resolve()
+        if path and target.is_relative_to(root) and target.is_file():
             return FileResponse(target)
         index = STATIC / "index.html"
         if index.exists():

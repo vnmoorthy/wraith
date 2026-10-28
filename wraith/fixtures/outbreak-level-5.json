@@ -1,0 +1,49 @@
+{
+  "scenario": "outbreak-level-5",
+  "ticks": [
+    {
+      "tick_id": 142,
+      "facility_id": "aws-builder-loft-sf",
+      "sector_reports": [
+        {
+          "sector": "catering_coffee_bar",
+          "sensors": { "emf_milligauss": 98, "temp_c": -4, "motion_events": 17 },
+          "sighting": { "entity_class": "level-5-phantom", "confidence": 0.82, "witness_count": 4 },
+          "civilian_status": "4 pinned",
+          "containment_state": "breached"
+        },
+        {
+          "sector": "main_stage",
+          "sensors": { "emf_milligauss": 12, "temp_c": 19, "motion_events": 2 },
+          "sighting": null,
+          "civilian_status": "clear",
+          "containment_state": "holding"
+        }
+      ],
+      "swarm_budget": { "max_active_agents": 8, "api_credits_remaining": 45000 },
+      "escalation_channel": { "app": "discord", "channel": "#loft-incident", "via": "one-mcp" }
+    },
+    {
+      "tick_id": 143,
+      "facility_id": "aws-builder-loft-sf",
+      "sector_reports": [
+        {
+          "sector": "catering_coffee_bar",
+          "sensors": { "emf_milligauss": 131, "temp_c": -7, "motion_events": 24 },
+          "sighting": { "entity_class": "level-5-phantom", "confidence": 0.91, "witness_count": 4 },
+          "civilian_status": "4 pinned",
+          "containment_state": "breached"
+        },
+        {
+          "sector": "entrance",
+          "sensors": { "emf_milligauss": 44, "temp_c": 11, "motion_events": 6 },
+          "sighting": { "entity_class": "residual-echo", "confidence": 0.35, "witness_count": 1 },
+          "civilian_status": "clear",
+          "containment_state": "holding"
+        }
+      ],
+      "swarm_budget": { "max_active_agents": 8, "api_credits_remaining": 43980 },
+      "escalation_channel": { "app": "discord", "channel": "#loft-incident", "via": "one-mcp" }
+    }
+  ]
+}

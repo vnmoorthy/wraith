@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 980" width="1600" height="980" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0912"/><stop offset="1" stop-color="#06050a"/>
+    </linearGradient>
+    <radialGradient id="glowV" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#7c3aed" stop-opacity="0.22"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowT" cx="85%" cy="80%" r="45%"><stop offset="0" stop-color="#14b8a6" stop-opacity="0.15"/><stop offset="1" stop-color="#14b8a6" stop-opacity="0"/></radialGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#a78bfa"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4ade80"/></marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#60a5fa"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f472b6"/></marker>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+    <style>
+      .t{fill:#ece7f6;font-weight:600;font-size:15px}
+      .s{fill:#9a93ad;font-size:12px}
+      .m{font-family:'JetBrains Mono',SFMono-Regular,Menlo,monospace;font-size:11px;fill:#9a93ad}
+      .h{font-family:Cinzel,Georgia,serif;font-weight:700;letter-spacing:5px;fill:#ece7f6}
+      .lab{font-family:'JetBrains Mono',SFMono-Regular,Menlo,monospace;font-size:10.5px;letter-spacing:2px;fill:#a78bfa}
+      .box{fill:#14111e;stroke:#a78bfa;stroke-opacity:.28;rx:14}
+      .flow{fill:none;stroke:#a78bfa;stroke-width:1.6;stroke-dasharray:6 5}
+      .flowG{fill:none;stroke:#4ade80;stroke-width:1.8}
+      .flowB{fill:none;stroke:#60a5fa;stroke-width:1.6}
+      .flowP{fill:none;stroke:#f472b6;stroke-width:1.6;stroke-dasharray:4 4}
+    </style>
+  </defs>
+  <rect width="1600" height="980" fill="url(#bg)"/>
+  <rect width="1600" height="980" fill="url(#glowV)"/>
+  <rect width="1600" height="980" fill="url(#glowT)"/>
+
+  <text x="60" y="70" class="h" font-size="34">WRAITH</text>
+  <text x="300" y="70" class="s" font-size="15">architecture · the war room that builds itself</text>
+  <g transform="translate(1040,46)">
+    <rect width="500" height="34" rx="17" fill="#ffffff" fill-opacity=".03" stroke="#ffffff" stroke-opacity=".08"/>
+    <circle cx="22" cy="17" r="5" fill="#fb923c"/><text x="34" y="21" class="m" fill="#ece7f6">CrewAI</text>
+    <circle cx="112" cy="17" r="5" fill="#a78bfa"/><text x="124" y="21" class="m" fill="#ece7f6">Parasail</text>
+    <circle cx="208" cy="17" r="5" fill="#60a5fa"/><text x="220" y="21" class="m" fill="#ece7f6">You.com</text>
+    <circle cx="300" cy="17" r="5" fill="#4ade80"/><text x="312" y="21" class="m" fill="#ece7f6">One</text>
+    <circle cx="364" cy="17" r="5" fill="#f472b6"/><text x="376" y="21" class="m" fill="#ece7f6">Scenario MCP</text>
+  </g>
+
+  <!-- column labels -->
+  <text x="60" y="130" class="lab">01 · INCIDENT</text>
+  <text x="380" y="130" class="lab">02 · CREWAI FLOW — ROUTE · GATHER · DELIBERATE · DECIDE</text>
+  <text x="1150" y="130" class="lab">03 · COMPILE · RENDER · ACT</text>
+
+  <!-- sources -->
+  <g>
+    <rect x="60" y="150" width="270" height="92" class="box"/>
+    <text x="80" y="180" class="t">Venue scenario feed</text>
+    <text x="80" y="200" class="m">MCP · hack26-get-tick</text>
+    <text x="80" y="220" class="s">live ticks: sectors, sensors, civilians</text>
+    <rect x="60" y="262" width="270" height="92" class="box"/>
+    <text x="80" y="292" class="t">Raw incident logs</text>
+    <text x="80" y="312" class="m">fixtures/haunted-dashboard.json</text>
+    <text x="80" y="332" class="s">unstructured spooky incident stream</text>
+    <rect x="60" y="374" width="270" height="92" class="box"/>
+    <text x="80" y="404" class="t">Reality mode</text>
+    <text x="80" y="424" class="m">plain English, any incident</text>
+    <text x="80" y="444" class="s">outages · fire · crowds · weather</text>
+  </g>
+  <path d="M330 196 C 355 196, 355 300, 382 300" class="flow" marker-end="url(#arr)"/>
+  <path d="M330 308 L 382 308" class="flow" marker-end="url(#arr)"/>
+  <path d="M330 420 C 355 420, 355 316, 382 316" class="flow" marker-end="url(#arr)"/>
+
+  <!-- flow container -->
+  <rect x="380" y="150" width="720" height="760" rx="20" fill="#fb923c" fill-opacity=".025" stroke="#fb923c" stroke-opacity=".35" stroke-dasharray="3 6"/>
+  <text x="400" y="176" class="m" fill="#fb923c">class WraithFlow(Flow) — crewai 1.15</text>
+
+  <!-- intake -->
+  <rect x="400" y="196" width="320" height="104" class="box" stroke="#a78bfa" stroke-opacity=".5"/>
+  <text x="420" y="224" class="t">@start · intake</text>
+  <text x="420" y="244" class="m">Parasail gpt-oss-120b-fast · json_schema</text>
+  <text x="420" y="264" class="s">classify, extract claims, plan web</text>
+  <text x="420" y="282" class="s">queries + grimoire query (Route)</text>
+
+  <!-- router -->
+  <rect x="760" y="196" width="320" height="104" class="box" stroke="#fb923c" stroke-opacity=".6"/>
+  <text x="780" y="224" class="t">@router · branch</text>
+  <g transform="translate(780,240)">
+    <rect width="86" height="24" rx="12" fill="#fb7185" fill-opacity=".14" stroke="#fb7185" stroke-opacity=".5"/><text x="12" y="16" class="m" fill="#fb7185">haunting</text>
+    <rect x="94" width="98" height="24" rx="12" fill="#60a5fa" fill-opacity=".14" stroke="#60a5fa" stroke-opacity=".5"/><text x="106" y="16" class="m" fill="#60a5fa">real_world</text>
+    <rect x="200" width="80" height="24" rx="12" fill="#4ade80" fill-opacity=".14" stroke="#4ade80" stroke-opacity=".5"/><text x="212" y="16" class="m" fill="#4ade80">control</text>
+  </g>
+  <text x="780" y="286" class="s">control = fast path, never escalates</text>
+  <path d="M720 248 L 758 248" class="flow" marker-end="url(#arr)"/>
+
+  <!-- intel tools -->
+  <text x="528" y="342" class="lab" font-size="9.5">INTEL · TOOLS IN PARALLEL</text>
+  <rect x="400" y="356" width="220" height="118" class="box"/>
+  <text x="418" y="382" class="t">Instruments</text>
+  <text x="418" y="402" class="m">z-scores vs baseline</text>
+  <text x="418" y="420" class="s">EMF + cold = signature;</text>
+  <text x="418" y="438" class="s">motion alone = people</text>
+  <text x="418" y="460" class="m" fill="#7dd3fc">→ Sentinel only</text>
+
+  <rect x="640" y="356" width="220" height="118" class="box" stroke="#a78bfa" stroke-opacity=".5"/>
+  <text x="658" y="382" class="t">Grimoire + oracle</text>
+  <text x="658" y="402" class="m">Parasail BGE-M3 embed</text>
+  <text x="658" y="420" class="s">31 countermeasures, doctrine,</text>
+  <text x="658" y="438" class="s">playbooks · hack26-ask-oracle</text>
+  <text x="658" y="460" class="m" fill="#f0abfc">→ Archivist only</text>
+
+  <rect x="880" y="356" width="200" height="118" class="box" stroke="#60a5fa" stroke-opacity=".6"/>
+  <text x="898" y="382" class="t">Live web</text>
+  <text x="898" y="402" class="m">You.com /v1/search</text>
+  <text x="898" y="420" class="m">extraction: highlights</text>
+  <text x="898" y="438" class="m">+ /v1/contents → md</text>
+  <text x="898" y="460" class="m" fill="#86efac">→ Verifier only</text>
+  <path d="M920 300 L 920 354" class="flow" marker-end="url(#arr)"/>
+  <path d="M900 300 L 900 322 L 750 322 L 750 354" class="flow" marker-end="url(#arr)"/>
+  <path d="M880 300 L 880 322 L 510 322 L 510 354" class="flow" marker-end="url(#arr)"/>
+
+  <!-- agents -->
+  <text x="526" y="516" class="lab" font-size="9.5">PARTIAL-KNOWLEDGE CREW</text><text x="768" y="516" class="lab" font-size="9.5">KICKOFF_ASYNC · SCHEMA</text>
+  <g>
+    <rect x="400" y="530" width="220" height="118" class="box" stroke="#7dd3fc" stroke-opacity=".6"/>
+    <text x="418" y="558" class="t" fill="#7dd3fc">◉ Sentinel</text>
+    <text x="418" y="580" class="s">knows: sensors</text>
+    <text x="418" y="598" class="s" fill="#5f5873">blind: sightings, lore, web</text>
+    <text x="418" y="630" class="m">SentinelBrief</text>
+
+    <rect x="640" y="530" width="220" height="118" class="box" stroke="#f0abfc" stroke-opacity=".6"/>
+    <text x="658" y="558" class="t" fill="#f0abfc">✶ Archivist</text>
+    <text x="658" y="580" class="s">knows: entity, grimoire, oracle</text>
+    <text x="658" y="598" class="s" fill="#5f5873">blind: raw sensors, web</text>
+    <text x="658" y="630" class="m">ArchivistBrief</text>
+
+    <rect x="880" y="530" width="200" height="118" class="box" stroke="#86efac" stroke-opacity=".6"/>
+    <text x="898" y="558" class="t" fill="#86efac">⌖ Verifier</text>
+    <text x="898" y="580" class="s">knows: claims + evidence</text>
+    <text x="898" y="598" class="s" fill="#5f5873">blind: sensors, lore</text>
+    <text x="898" y="630" class="m">VerifierBrief</text>
+  </g>
+  <path d="M510 474 L 510 528" class="flow" marker-end="url(#arr)"/>
+  <path d="M750 474 L 750 528" class="flow" marker-end="url(#arr)"/>
+  <path d="M980 474 L 980 528" class="flow" marker-end="url(#arr)"/>
+
+  <!-- commander -->
+  <rect x="520" y="690" width="440" height="96" class="box" stroke="#fbbf24" stroke-opacity=".7"/>
+  <text x="540" y="718" class="t" fill="#fbbf24">♛ Commander</text>
+  <text x="680" y="718" class="m">Parasail deepseek-v41-flash</text>
+  <text x="540" y="742" class="s">sees only the three briefs · doctrine: evacuate if civilians in contact zone,</text>
+  <text x="540" y="760" class="s">contain if localised, observe if control/unknown → CommanderDecision</text>
+  <path d="M510 648 C 510 670, 600 670, 600 688" class="flow" marker-end="url(#arr)"/>
+  <path d="M750 648 L 750 688" class="flow" marker-end="url(#arr)"/>
+  <path d="M980 648 C 980 670, 900 670, 900 688" class="flow" marker-end="url(#arr)"/>
+
+  <!-- compiler -->
+  <rect x="400" y="812" width="680" height="80" class="box" stroke="#a78bfa" stroke-opacity=".7"/>
+  <text x="420" y="840" class="t">@listen · compile — the interface compiler</text>
+  <text x="420" y="862" class="m">Parasail stream:true · response_format json_schema (anyOf over 14 component variants)</text>
+  <text x="420" y="880" class="s">the model chooses, orders and fills the components for THIS incident</text>
+  <path d="M740 786 L 740 810" class="flow" marker-end="url(#arr)"/>
+
+  <!-- right column -->
+  <path d="M1080 852 C 1120 852, 1120 220, 1148 220" class="flow" stroke-width="2.2" marker-end="url(#arr)"/>
+  <text x="1112" y="540" class="m" fill="#a78bfa" transform="rotate(-90 1112 540)">WebSocket · token deltas</text>
+
+  <rect x="1150" y="150" width="390" height="140" class="box" stroke="#a78bfa" stroke-opacity=".5"/>
+  <text x="1170" y="178" class="t">Live renderer (React)</text>
+  <text x="1170" y="198" class="m">partial-json parse on every delta</text>
+  <text x="1170" y="218" class="s">a component materialises the moment its</text>
+  <text x="1170" y="236" class="s">name + props arrive · X-ray shows raw stream</text>
+  <text x="1170" y="262" class="s">provenance mode colours each by its agent</text>
+
+  <rect x="1150" y="310" width="390" height="200" class="box"/>
+  <text x="1170" y="338" class="t">Operable command station</text>
+  <g class="m" fill="#ece7f6">
+    <text x="1170" y="364">ThreatHeader · EMFRadar · SectorMap</text>
+    <text x="1170" y="384">CountermeasureSelector · CivilianTracker</text>
+    <text x="1170" y="404">EvidenceRail · GrimoireHits · Telemetry</text>
+    <text x="1170" y="424">ProtocolChecklist · DecisionCard · StatGrid</text>
+    <text x="1170" y="444">CommsDraft · ResourceBoard · DispatchConsole</text>
+  </g>
+  <text x="1170" y="476" class="s">isolate sectors, arm countermeasures, evacuate,</text>
+  <text x="1170" y="494" class="s">tick the protocol · the payload rebuilds live</text>
+  <path d="M1345 290 L 1345 308" class="flow" marker-end="url(#arr)"/>
+
+  <rect x="1150" y="530" width="390" height="140" class="box" stroke="#4ade80" stroke-opacity=".6"/>
+  <text x="1170" y="558" class="t" fill="#4ade80">One — the actuator</text>
+  <text x="1170" y="580" class="m">list_one_integrations → find_one_actions</text>
+  <text x="1170" y="598" class="m">→ execute_one_action (discord)</text>
+  <text x="1170" y="622" class="s">channelId in path vars, payload from runtime state</text>
+  <text x="1170" y="642" class="s">receipt (message id, latency) back into the UI</text>
+  <path d="M1345 510 L 1345 528" class="flowG" marker-end="url(#arrG)"/>
+
+  <rect x="1150" y="690" width="390" height="70" rx="14" fill="#5865f2" fill-opacity=".12" stroke="#5865f2" stroke-opacity=".6"/>
+  <text x="1170" y="720" class="t">Discord #loft-incident</text>
+  <text x="1170" y="742" class="m">team-XX · [sector] · ACTION · rationale · evidence</text>
+  <path d="M1345 670 L 1345 688" class="flowG" marker-end="url(#arrG)"/>
+
+  <rect x="1150" y="780" width="390" height="112" class="box" stroke="#f472b6" stroke-opacity=".6"/>
+  <text x="1170" y="808" class="t" fill="#f472b6">Autopilot · Track 1</text>
+  <text x="1170" y="830" class="m">get-tick → swarm → submit-containment</text>
+  <text x="1170" y="850" class="s">judgment + false-alarm flag + live scoreboard</text>
+  <text x="1170" y="870" class="s">every run recorded · REPLAY works offline</text>
+  <path d="M1150 836 C 1110 836, 1110 960, 300 960 L 60 960 C 36 960, 30 940, 30 900 L 30 210 C 30 196, 40 196, 58 196" class="flowP" marker-end="url(#arrP)"/>
+  <text x="420" y="944" class="m" fill="#f472b6">submit-containment · next tick</text>
+</svg>

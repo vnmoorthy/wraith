@@ -1,0 +1,10 @@
+crewai==1.15.2
+crewai-tools[mcp]==1.15.2
+mcp~=1.26.0
+fastapi>=0.115
+uvicorn[standard]>=0.30
+httpx>=0.27
+openai>=1.50
+python-dotenv>=1.0
+numpy>=1.26
+json-repair>=0.30

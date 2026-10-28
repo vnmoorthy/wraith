@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WRAITH — the war room that builds itself</title>
+<meta name="description" content="A CrewAI swarm with partial knowledge reads any incident, verifies it against the live web with You.com, and Parasail streams a bespoke, operable command station into existence. One acts on it." />
+<meta property="og:title" content="WRAITH — the war room that builds itself" />
+<meta property="og:description" content="Don't build a dashboard. Compile one. CrewAI · Parasail · You.com · One." />
+<meta property="og:image" content="https://vnmoorthy.github.io/wraith/img/hero.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root { --bone:#ece7f6; --ash:#9a93ad; --v:#a78bfa; --t:#5eead4; }
+  * { box-sizing: border-box; margin: 0; }
+  body { min-height: 100vh; background: #06050a; color: var(--bone); font-family: Inter, system-ui, sans-serif; overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: -20%; pointer-events: none;
+    background: radial-gradient(40% 30% at 20% 30%, rgba(124,58,237,.22), transparent 70%), radial-gradient(35% 30% at 80% 70%, rgba(20,184,166,.14), transparent 70%);
+    animation: drift 30s ease-in-out infinite alternate; }
+  @keyframes drift { to { transform: translate3d(4%, 3%, 0) scale(1.08); } }
+  main { position: relative; max-width: 1100px; margin: 0 auto; padding: 72px 16px; text-align: center; }
+  .k { font: 500 13px "JetBrains Mono", monospace; letter-spacing: .32em; color: var(--v); }
+  h1 { font: 900 clamp(56px, 12vw, 120px) Cinzel, serif; letter-spacing: .12em; margin-top: 14px; text-shadow: 0 0 50px rgba(167,139,250,.6); }
+  .t { font-size: clamp(20px, 3vw, 28px); font-weight: 600; margin-top: 6px; }
+  p { color: var(--ash); font-size: 17px; line-height: 1.6; max-width: 720px; margin: 18px auto 0; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+  a.b { text-decoration: none; padding: 14px 22px; border-radius: 14px; font: 700 14px Cinzel, serif; letter-spacing: .2em; }
+  a.p { background: linear-gradient(90deg, var(--v), var(--t)); color: #000; box-shadow: 0 0 40px -10px var(--v); }
+  a.s { border: 1px solid rgba(167,139,250,.4); color: var(--bone); }
+  img { width: 100%; border-radius: 16px; border: 1px solid rgba(167,139,250,.35); margin-top: 48px; box-shadow: 0 40px 120px -40px rgba(167,139,250,.6); }
+  .note { font: 500 12px "JetBrains Mono", monospace; color: #5f5873; margin-top: 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="k">HACK WITH YOU · HALLOWEEN 2026</div>
+  <h1>WRAITH</h1>
+  <div class="t">The war room that builds itself.</div>
+  <p>A CrewAI swarm with partial knowledge reads any incident — haunted or real — verifies it against the live web with You.com, and Parasail streams a bespoke, operable command station into existence, component by component. One button and One posts it to Discord.</p>
+  <div class="cta">
+    <a class="b p" href="app/">Watch a live run</a>
+    <a class="b s" href="deck/">Pitch deck</a>
+    <a class="b s" href="https://github.com/vnmoorthy/wraith">GitHub</a>
+  </div>
+  <div class="note">the hosted viewer replays recordings of real runs with their original timing · clone and ./run.sh to summon live</div>
+  <img src="img/hero.jpg" alt="WRAITH stations generated for a haunting and a real power outage" />
+</main>
+</body>
+</html>

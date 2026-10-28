@@ -1,0 +1,11 @@
+.env
+.venv/
+.wraith/
+node_modules/
+web/node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+.onerc
+.claude/
+dist/

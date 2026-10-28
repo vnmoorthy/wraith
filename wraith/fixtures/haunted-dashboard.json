@@ -1,0 +1,10 @@
+{
+  "scenario": "haunted-dashboard",
+  "ticks": [
+    {
+      "incident_id": "spooky-2026-9912",
+      "severity_tier": "CRITICAL_HAUNT",
+      "raw_incident_stream": "ALERT: Reports of a level-5 Phantom apparition at the AWS Builder Loft catering sector. Entities are disrupting the local network nodes. 4 engineers are currently pinned behind the coffee bar. Ambient temperature dropped to -4C. EMF emissions registering at 98 milligauss and climbing rapidly. Traditional security systems completely non-responsive."
+    }
+  ]
+}

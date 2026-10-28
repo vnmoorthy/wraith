@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WRAITH — pitch deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #06050a; --bone: #ece7f6; --ash: #9a93ad; --fog: #5f5873;
+    --v: #a78bfa; --t: #5eead4; --r: #fb7185; --a: #fbbf24; --g: #4ade80; --b: #60a5fa; --o: #fb923c; --p: #f472b6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: var(--bone); }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; }
+  .slide { position: absolute; inset: 0; background: var(--void); overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .6s ease; padding: 96px 120px; }
+  .slide.active { opacity: 1; pointer-events: auto; }
+  .slide::before { content: ""; position: absolute; inset: -20%; pointer-events: none;
+    background: radial-gradient(40% 30% at 20% 30%, rgba(124,58,237,.18), transparent 70%), radial-gradient(35% 30% at 80% 70%, rgba(20,184,166,.12), transparent 70%), radial-gradient(30% 25% at 60% 15%, rgba(244,63,94,.08), transparent 70%);
+    animation: drift 30s ease-in-out infinite alternate; }
+  .slide::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .045; background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px); }
+  @keyframes drift { to { transform: translate3d(4%, 3%, 0) scale(1.08); } }
+  .slide > * { position: relative; z-index: 1; }
+
+  .kicker { font-family: "JetBrains Mono", monospace; letter-spacing: .32em; text-transform: uppercase; font-size: 20px; color: var(--v); }
+  h1, h2 { font-family: Cinzel, Georgia, serif; margin: 0; font-weight: 900; letter-spacing: .02em; }
+  h2 { font-size: 76px; line-height: 1.05; margin-top: 18px; text-shadow: 0 0 40px rgba(167,139,250,.35); }
+  p.lede { font-size: 30px; line-height: 1.45; color: var(--ash); max-width: 1300px; margin-top: 26px; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .num { position: absolute; right: 60px; bottom: 44px; font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--fog); letter-spacing: .2em; z-index: 3; }
+  .brand { position: absolute; left: 120px; bottom: 44px; font-family: Cinzel, serif; font-weight: 900; letter-spacing: .4em; font-size: 18px; color: var(--fog); z-index: 3; }
+  .panel { background: rgba(18,15,28,.78); border: 1px solid rgba(167,139,250,.2); border-radius: 22px; box-shadow: 0 30px 80px -40px rgba(167,139,250,.5); }
+
+  /* reveal choreography */
+  .r { opacity: 0; transform: translateY(26px); filter: blur(8px); }
+  .active .r { animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; filter: none; } }
+  .d1 { animation-delay: .15s !important } .d2 { animation-delay: .35s !important } .d3 { animation-delay: .55s !important } .d4 { animation-delay: .75s !important }
+  .d5 { animation-delay: .95s !important } .d6 { animation-delay: 1.15s !important } .d7 { animation-delay: 1.35s !important } .d8 { animation-delay: 1.6s !important }
+  .d9 { animation-delay: 1.9s !important } .d10 { animation-delay: 2.2s !important } .d11 { animation-delay: 2.5s !important } .d12 { animation-delay: 2.8s !important }
+
+  /* slide 1 */
+  .ring { position: absolute; right: 150px; top: 170px; width: 640px; height: 640px; border-radius: 50%; border: 1px solid rgba(167,139,250,.35); animation: spin 40s linear infinite; }
+  .ring span { position: absolute; left: 50%; top: 50%; font-family: "JetBrains Mono", monospace; font-size: 26px; color: rgba(167,139,250,.6); }
+  .ring2 { position: absolute; right: 230px; top: 250px; width: 480px; height: 480px; border-radius: 50%; border: 1px dashed rgba(94,234,212,.25); animation: spin 26s linear infinite reverse; }
+  .ghost { position: absolute; right: 360px; top: 380px; font-size: 200px; filter: drop-shadow(0 0 60px rgba(167,139,250,.7)); animation: float 5s ease-in-out infinite, flick 5s infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes float { 50% { transform: translateY(-22px); } }
+  @keyframes flick { 0%,18%,22%,56%,100% { opacity: 1 } 20%,55% { opacity: .5 } }
+  .title { font-size: 190px; letter-spacing: .14em; margin-top: 150px; }
+  .title span { display: inline-block; opacity: 0; filter: blur(20px); transform: translateY(30px) scale(1.2); }
+  .active .title span { animation: letter 1s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes letter { to { opacity: 1; filter: none; transform: none; text-shadow: 0 0 60px rgba(167,139,250,.6); } }
+  .chips { display: flex; gap: 16px; margin-top: 70px; flex-wrap: wrap; }
+  .chip { font-family: "JetBrains Mono", monospace; font-size: 20px; padding: 10px 20px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); display: flex; align-items: center; gap: 10px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+
+  /* slide 2 */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 70px; }
+  .stat { padding: 40px; }
+  .stat .big { font-family: "JetBrains Mono", monospace; font-size: 96px; font-weight: 700; }
+  .stat .lbl { font-size: 26px; color: var(--ash); margin-top: 10px; line-height: 1.35; }
+  .glitch { animation: glitch 2.4s infinite steps(1); }
+  @keyframes glitch { 0%,92%,100% { transform: none; filter: none } 93% { transform: translateX(-6px) skewX(6deg); filter: hue-rotate(90deg) } 95% { transform: translateX(5px); } 97% { transform: none; opacity: .6 } }
+
+  /* slide 3 */
+  .split { display: grid; grid-template-columns: 780px 1fr; gap: 44px; margin-top: 44px; height: 700px; }
+  .code { padding: 28px; font-family: "JetBrains Mono", monospace; font-size: 16px; line-height: 1.5; white-space: pre-wrap; overflow: hidden; color: #c4b5fd; }
+  .code .s { color: #86efac } .code .n { color: #fbbf24 } .code .p { color: #6b6480 }
+  .caret::after { content: "▍"; color: var(--v); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0 } }
+  .comps { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-content: start; }
+  .comp { padding: 24px; opacity: 0; filter: blur(16px); transform: translateY(16px) scale(.98); }
+  .comp.on { animation: mat .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes mat { 0% { clip-path: inset(0 0 100% 0); } 60% { opacity: 1; filter: blur(2px); clip-path: inset(0 0 0 0); } 100% { opacity: 1; filter: none; transform: none; } }
+  .comp .t { font-family: "JetBrains Mono", monospace; font-size: 15px; letter-spacing: .2em; color: var(--ash); text-transform: uppercase; }
+  .comp .v { font-size: 30px; font-weight: 700; margin-top: 10px; }
+
+  /* slide 4 pipeline */
+  .pipe { position: absolute; left: 120px; right: 120px; top: 330px; height: 560px; }
+  .node { position: absolute; width: 270px; padding: 22px 24px; background: rgba(14,12,22,.96); }
+  .node .h { font-size: 26px; font-weight: 700; }
+  .node .s { font-family: "JetBrains Mono", monospace; font-size: 15.5px; color: var(--ash); margin-top: 8px; line-height: 1.45; }
+  svg .draw { stroke-dasharray: 2400; stroke-dashoffset: 2400; }
+  .active svg .draw { animation: draw 3.2s ease forwards .4s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .packet { offset-rotate: 0deg; animation: none; opacity: 0; }
+  .active .packet { animation: travel 4s linear infinite 1.2s; }
+  @keyframes travel { 0% { offset-distance: 0%; opacity: 0 } 5% { opacity: 1 } 95% { opacity: 1 } 100% { offset-distance: 100%; opacity: 0 } }
+
+  /* slide 5 swarm */
+  .agents { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 60px; }
+  .agent { padding: 30px; }
+  .agent .n { font-size: 34px; font-weight: 800; }
+  .agent .k { font-family: "JetBrains Mono", monospace; font-size: 18px; margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .agent .k span { padding: 5px 12px; border-radius: 8px; }
+  .blind { color: var(--fog); text-decoration: line-through; background: rgba(255,255,255,.03); }
+  .cmd { margin: 44px auto 0; width: 1000px; padding: 30px 40px; text-align: center; border-color: rgba(251,191,36,.5); }
+
+  /* slide 6 */
+  .ab { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 64px; }
+  .card { height: 380px; perspective: 1400px; }
+  .flip { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.2,.8,.2,1); }
+  .active .flip { animation: flip 1.1s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes flip { to { transform: rotateY(180deg); } }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; padding: 34px; display: flex; flex-direction: column; }
+  .back { transform: rotateY(180deg); }
+  .face .pn { font-size: 40px; font-weight: 800; }
+  .face .role { font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--ash); margin-top: 14px; line-height: 1.5; }
+  .face .off { font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: .25em; color: var(--r); }
+  .face .what { font-size: 26px; line-height: 1.4; margin-top: 18px; }
+
+  /* slide 7 demo */
+  .shots { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; margin-top: 50px; }
+  .shot { border-radius: 18px; overflow: hidden; border: 1px solid rgba(167,139,250,.35); box-shadow: 0 40px 120px -40px rgba(167,139,250,.6); position: relative; background: #0d0b14; }
+  .shot img { display: block; width: 100%; }
+  .shot .cap { position: absolute; left: 18px; bottom: 16px; font-family: "JetBrains Mono", monospace; font-size: 17px; background: rgba(0,0,0,.7); padding: 8px 14px; border-radius: 10px; }
+  .scan { position: absolute; left: 0; right: 0; height: 30%; top: -30%; background: linear-gradient(180deg, transparent, rgba(167,139,250,.25), transparent); }
+  .active .scan { animation: sweep 2.6s linear infinite; }
+  @keyframes sweep { to { top: 110%; } }
+  .beats { display: flex; gap: 10px; margin-top: 30px; flex-wrap: nowrap; }
+  .beat { font-family: "JetBrains Mono", monospace; font-size: 15.5px; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+  .beat b { color: var(--v); }
+
+  /* slide 8 */
+  .ticks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 54px; }
+  .tick { padding: 34px; }
+  .tick .id { font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--ash); }
+  .tick .act { font-family: Cinzel, serif; font-weight: 900; font-size: 58px; margin-top: 14px; }
+  .tick .why { font-size: 21px; color: var(--ash); margin-top: 12px; line-height: 1.4; }
+  .tick .ok { font-family: "JetBrains Mono", monospace; font-size: 19px; margin-top: 18px; color: var(--g); }
+  .kpis { display: flex; gap: 30px; margin-top: 40px; }
+  .kpi { flex: 1; padding: 28px 34px; }
+  .kpi .big { font-family: "JetBrains Mono", monospace; font-size: 64px; font-weight: 700; }
+  .kpi .lbl { font-family: "JetBrains Mono", monospace; font-size: 17px; letter-spacing: .2em; color: var(--ash); text-transform: uppercase; }
+
+  /* slide 9 */
+  .uses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 60px; }
+  .use { padding: 32px; }
+  .use .e { font-size: 50px; }
+  .use .h { font-size: 30px; font-weight: 800; margin-top: 12px; }
+  .use .s { font-size: 22px; color: var(--ash); margin-top: 10px; line-height: 1.4; }
+
+  /* slide 10 */
+  .bars { margin-top: 44px; display: flex; flex-direction: column; gap: 12px; width: 1060px; }
+  .bar { display: grid; grid-template-columns: 400px 1fr 70px; align-items: center; gap: 18px; font-size: 22px; }
+  .bar .track { height: 26px; background: rgba(255,255,255,.04); border-radius: 13px; overflow: hidden; }
+  .bar .fill { height: 100%; width: 0; border-radius: 13px; background: linear-gradient(90deg, rgba(167,139,250,.5), var(--v)); }
+  .active .bar .fill { animation: grow 1.6s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes grow { to { width: var(--w); } }
+  .bar.win .fill { background: linear-gradient(90deg, var(--v), var(--t)); box-shadow: 0 0 30px rgba(94,234,212,.6); }
+  .bar .sc { font-family: "JetBrains Mono", monospace; color: var(--ash); text-align: right; }
+  .cta { position: absolute; right: 100px; top: 380px; width: 560px; padding: 40px; }
+
+  body.static .r, body.static .title span { opacity: 1 !important; transform: none !important; filter: none !important; animation: none !important; }
+  body.static .comp { opacity: 1; filter: none; transform: none; animation: none; }
+  body.static .bar .fill { width: var(--w); animation: none; }
+  body.static .flip { transform: rotateY(180deg); animation: none; }
+  body.static svg .draw { stroke-dashoffset: 0; animation: none; }
+  body.static .slide { transition: none; }
+  body.static #hint, body.static #progress { display: none; }
+  #progress { position: fixed; left: 0; bottom: 0; height: 4px; background: linear-gradient(90deg, var(--v), var(--t)); transition: width .5s ease; z-index: 10; box-shadow: 0 0 20px var(--v); }
+  #hint { position: fixed; right: 18px; top: 14px; font: 12px "JetBrains Mono", monospace; color: #5f5873; z-index: 10; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 · TITLE -->
+<section class="slide" data-n="1">
+  <div class="ring" id="runes"></div>
+  <div class="ring2"></div>
+  <div class="ghost">👻</div>
+  <div class="kicker r d1">Hack with YOU · Halloween Edition · AWS Builder Loft</div>
+  <h1 class="title" id="wtitle">WRAITH</h1>
+  <p class="lede r d8" style="font-size:40px;color:var(--bone);margin-top:10px">The war room that builds itself.</p>
+  <p class="lede r d9" style="max-width:1000px">A CrewAI swarm with partial knowledge reads any incident — haunted or real — and Parasail streams a bespoke, operable command station into existence, component by component. One button and the room's Discord lights up.</p>
+  <div class="chips">
+    <div class="chip r d10"><span class="dot" style="background:var(--o)"></span>CrewAI Flow + swarm</div>
+    <div class="chip r d10"><span class="dot" style="background:var(--v)"></span>Parasail streaming · json_schema · BGE-M3</div>
+    <div class="chip r d11"><span class="dot" style="background:var(--b)"></span>You.com search + contents</div>
+    <div class="chip r d11"><span class="dot" style="background:var(--g)"></span>One → Discord</div>
+  </div>
+  <div class="num">01 / 10</div>
+</section>
+
+<!-- 2 · PROBLEM -->
+<section class="slide" data-n="2">
+  <div class="kicker r d1">The problem</div>
+  <h2 class="r d2">Every incident is different.<br/>Every dashboard is the same.</h2>
+  <p class="lede r d3">When something goes wrong — a breach on the venue floor, a cloud region falling over, smoke over the Bay — operators get a static dashboard built months ago for a different crisis, and a wall of unverified chatter.</p>
+  <div class="grid3">
+    <div class="panel stat r d5"><div class="big glitch" style="color:var(--r)" data-count="0">0</div><div class="lbl">dashboards that were designed for <i>this</i> incident before it happened</div></div>
+    <div class="panel stat r d6"><div class="big" style="color:var(--a)">3 AM</div><div class="lbl">when the on-call human has to stitch sensors, rumours and runbooks together alone</div></div>
+    <div class="panel stat r d7"><div class="big" style="color:var(--t)">1 tool</div><div class="lbl">should read the incident, verify it against the live web, decide — and act</div></div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">02 / 10</div>
+</section>
+
+<!-- 3 · INSIGHT -->
+<section class="slide" data-n="3">
+  <div class="kicker r d1">The insight</div>
+  <h2 class="r d2" style="font-size:62px">Don't build a dashboard. <span style="color:var(--v)">Compile one.</span></h2>
+  <div class="split">
+    <div class="panel code caret r d3" id="jsonstream"></div>
+    <div class="comps" id="compgrid">
+      <div class="panel comp" style="grid-column:span 2;border-color:rgba(251,113,133,.5)"><div class="t">ThreatHeader · router</div><div class="v" style="color:var(--r);font-family:Cinzel,serif;font-size:34px">Level-5 phantom breach in catering coffee bar</div></div>
+      <div class="panel comp"><div class="t">EMFRadar · sentinel</div><div class="v mono" style="color:var(--r);font-size:56px">98 mG</div></div>
+      <div class="panel comp"><div class="t">DecisionCard · commander</div><div class="v" style="color:var(--r);font-family:Cinzel,serif;font-size:44px">EVACUATE</div></div>
+      <div class="panel comp"><div class="t">EvidenceRail · verifier</div><div class="v" style="font-size:21px;color:var(--g)">✓ outdoor weather mild (50–67°F): the −4°C is not weather<br/>✓ no grid outage at 525 Market St</div></div>
+      <div class="panel comp"><div class="t">CountermeasureSelector · archivist</div><div class="v" style="font-size:22px">☑ spectral decoy · ☑ UV lantern array<br/>☐ banishment rite (after evacuation)</div></div>
+      <div class="panel comp" style="grid-column:span 2;border-color:rgba(74,222,128,.5)"><div class="t">DispatchConsole → One → #loft-incident</div><div class="v mono" style="font-size:20px;color:#d9f99d">team · [catering_coffee_bar] · EVACUATE · 4 civilians pinned in the contact zone · decoy + UV armed</div></div>
+    </div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">03 / 10</div>
+</section>
+
+<!-- 4 · PIPELINE -->
+<section class="slide" data-n="4">
+  <div class="kicker r d1">How it works</div>
+  <h2 class="r d2" style="font-size:46px">Route → gather → deliberate → decide → compile → act</h2>
+  <div class="pipe" style="top:300px">
+    <svg width="1680" height="520" style="position:absolute;inset:0"><path class="draw" d="M170 90 L 1510 90 C 1600 90, 1600 390, 1510 390 L 170 390" fill="none" stroke="#a78bfa" stroke-width="3" stroke-dasharray="10 8" opacity=".75"/></svg>
+    <div class="packet" style="position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--t);box-shadow:0 0 34px var(--t);offset-path:path('M170 90 L 1510 90 C 1600 90, 1600 390, 1510 390 L 170 390')"></div>
+    <div class="panel node r d3" style="left:0px;top:0px;width:340px;min-height:180px;border-color:rgba(167,139,250,.6)"><div class="h">① Intake</div><div class="s">@start · Parasail gpt-oss<br/>json_schema Route</div></div>
+    <div class="panel node r d4" style="left:447px;top:0px;width:340px;min-height:180px;border-color:rgba(251,146,60,.6)"><div class="h">② @router</div><div class="s">haunting · real_world<br/>control → never escalates</div></div>
+    <div class="panel node r d5" style="left:893px;top:0px;width:340px;min-height:180px;border-color:rgba(96,165,250,.6)"><div class="h">③ Intel</div><div class="s">You.com search + contents<br/>BGE-M3 grimoire · oracle</div></div>
+    <div class="panel node r d6" style="left:1340px;top:0px;width:340px;min-height:180px;border-color:rgba(240,171,252,.6)"><div class="h">④ Swarm</div><div class="s">Sentinel · Archivist · Verifier<br/>partial knowledge, parallel</div></div>
+    <div class="panel node r d7" style="left:1340px;top:300px;width:340px;min-height:180px;border-color:rgba(251,191,36,.6)"><div class="h">⑤ Commander</div><div class="s">sees only the briefs<br/>contain · evacuate · observe</div></div>
+    <div class="panel node r d8" style="left:893px;top:300px;width:340px;min-height:180px;border-color:rgba(167,139,250,.6)"><div class="h">⑥ Compiler</div><div class="s">Parasail stream:true<br/>schema-locked manifest</div></div>
+    <div class="panel node r d9" style="left:447px;top:300px;width:340px;min-height:180px;border-color:rgba(94,234,212,.6)"><div class="h">⑦ Live station</div><div class="s">WebSocket → partial-JSON<br/>14 operable components</div></div>
+    <div class="panel node r d10" style="left:0px;top:300px;width:340px;min-height:180px;border-color:rgba(74,222,128,.6)"><div class="h">⑧ One → Discord</div><div class="s">list → find → execute<br/>payload from live state</div></div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">04 / 10</div>
+</section>
+
+<!-- 5 · SWARM -->
+<section class="slide" data-n="5">
+  <div class="kicker r d1">The swarm</div>
+  <h2 class="r d2">No agent sees everything.</h2>
+  <p class="lede r d3">Each agent gets only its slice of the world — the way a real incident team works. The Commander never sees raw data, only the briefs, and has to resolve their disagreements.</p>
+  <div class="agents">
+    <div class="panel agent r d4" style="border-color:rgba(125,211,252,.5)"><div class="n" style="color:#7dd3fc">◉ Sentinel</div><div class="k"><span style="background:rgba(125,211,252,.12);color:#7dd3fc">EMF · thermal · motion z-scores</span><span class="blind">sightings</span><span class="blind">lore</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Coffee bar reads 98 mG (z=11.5) and −4 °C (z=−10). Cold plus EMF, not motion alone — this is not a crowd.” → <b style="color:var(--a)">contain</b></p></div>
+    <div class="panel agent r d5" style="border-color:rgba(240,171,252,.5)"><div class="n" style="color:#f0abfc">✶ Archivist</div><div class="k"><span style="background:rgba(240,171,252,.12);color:#f0abfc">grimoire · BGE-M3 retrieval · oracle</span><span class="blind">raw sensors</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Level-5 phantom confirmed by EMF and cold; evacuate pinned civilians before banishment.” → <b style="color:var(--r)">evacuate</b></p></div>
+    <div class="panel agent r d6" style="border-color:rgba(134,239,172,.5)"><div class="n" style="color:#86efac">⌖ Verifier</div><div class="k"><span style="background:rgba(134,239,172,.12);color:#86efac">You.com highlights · page contents</span><span class="blind">sensors</span><span class="blind">lore</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Mild outdoor weather and no grid outage at the address: mundane causes don’t explain the readings.” → <b style="color:var(--g)">observe</b></p></div>
+  </div>
+  <div class="panel cmd r d8"><div style="font-size:36px;font-weight:800;color:var(--a)">♛ Commander → EVACUATE</div><div class="lede" style="font-size:22px;margin:10px 0 0;max-width:none">“Sentinel urged contain, Verifier urged observe. Civilian exposure and mobility break the tie toward evacuate.” <span class="mono" style="font-size:16px;color:var(--fog)">— real output, tick 142</span></div></div>
+  <div class="brand">WRAITH</div><div class="num">05 / 10</div>
+</section>
+
+<!-- 6 · ABLATION -->
+<section class="slide" data-n="6">
+  <div class="kicker r d1">Every partner is load-bearing</div>
+  <h2 class="r d2">Switch one off — live. Watch it break.</h2>
+  <div class="ab">
+    <div class="card r d3"><div class="flip" style="animation-delay:1.2s"><div class="panel face"><div class="pn" style="color:var(--v)">Parasail</div><div class="role">router · 4 agents · streaming compiler · BGE-M3 embeddings · model routing gpt-oss / DeepSeek</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--v);margin-top:10px">No Parasail</div><div class="what">No brain, no interface. The station never assembles.</div></div></div></div>
+    <div class="card r d4"><div class="flip" style="animation-delay:1.5s"><div class="panel face"><div class="pn" style="color:var(--o)">CrewAI</div><div class="role">Flow @start / @router / @listen · partial-knowledge agents · commander</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--o);margin-top:10px">No CrewAI</div><div class="what">One generic layout from raw text. No routing, no verification, no decision.</div></div></div></div>
+    <div class="card r d5"><div class="flip" style="animation-delay:1.8s"><div class="panel face"><div class="pn" style="color:var(--b)">You.com</div><div class="role">search with highlights + contents · every claim gets a clickable source</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--b);margin-top:10px">No You.com</div><div class="what">The evidence rail goes empty. Severity becomes “unverified”.</div></div></div></div>
+    <div class="card r d6"><div class="flip" style="animation-delay:2.1s"><div class="panel face"><div class="pn" style="color:var(--g)">One</div><div class="role">list_one_integrations → find_one_actions → execute_one_action · Discord</div></div><div class="panel face back" style="border-color:rgba(251,113,133,.5)"><div class="off">ABLATED</div><div class="pn" style="color:var(--g);margin-top:10px">No One</div><div class="what">The station sees the threat — and can't act on it.</div></div></div></div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">06 / 10</div>
+</section>
+
+<!-- 7 · DEMO -->
+<section class="slide" data-n="7">
+  <div class="kicker r d1">Live demo</div>
+  <h2 class="r d2" style="font-size:52px">Same engine. Different incident. Different interface.</h2>
+  <div class="shots">
+    <div class="shot r d3"><img src="../img/station-haunting.jpg" onerror="this.style.minHeight='520px';this.style.visibility='hidden'" /><div class="scan"></div><div class="cap" style="color:var(--r)">haunting · venue feed · spectral-goth-dark</div></div>
+    <div class="shot r d5"><img src="../img/station-reality.jpg" onerror="this.style.minHeight='520px';this.style.visibility='hidden'" /><div class="scan" style="animation-delay:1.2s"></div><div class="cap" style="color:var(--a)">reality mode · power cut at the Loft · daylight-ops</div></div>
+  </div>
+  <div class="beats">
+    <div class="beat r d6"><b>01</b> judge types an incident</div>
+    <div class="beat r d7"><b>02</b> agents stream their briefs</div>
+    <div class="beat r d8"><b>03</b> the UI assembles itself</div>
+    <div class="beat r d9"><b>04</b> operator arms countermeasures</div>
+    <div class="beat r d10"><b>05</b> DISPATCH → the room's Discord pings</div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">07 / 10</div>
+</section>
+
+<!-- 8 · TRACK 1 -->
+<section class="slide" data-n="8">
+  <div class="kicker r d1">Track 1 · Exorcism Protocol · autopilot</div>
+  <h2 class="r d2" style="font-size:64px">The same swarm plays the venue feed.</h2>
+  <div class="ticks">
+    <div class="panel tick r d3"><div class="id">tick 142 · outbreak-level-5</div><div class="act" style="color:var(--r)">EVACUATE</div><div class="why">catering breached · 4 pinned · EMF 98 · −4°C</div><div class="ok" id="t142">✓ matches doctrine · escalate</div></div>
+    <div class="panel tick r d4"><div class="id">tick 143 · outbreak-level-5</div><div class="act" style="color:var(--r)">EVACUATE</div><div class="why">EMF rising 98 → 131 · entrance echo = observe</div><div class="ok" id="t143">✓ matches doctrine · escalate</div></div>
+    <div class="panel tick r d5"><div class="id">tick 900 · control-tick</div><div class="act" style="color:var(--g)">OBSERVE</div><div class="why">41 motion events, EMF 3, 21°C — a human crowd</div><div class="ok" id="t900">✓ “crowd, not entity” · held, 0.97</div></div>
+  </div>
+  <div class="kpis">
+    <div class="panel kpi r d6"><div class="lbl">practice ticks correct</div><div class="big" style="color:var(--v)">3 / 3</div></div>
+    <div class="panel kpi r d7"><div class="lbl">false alarms</div><div class="big" style="color:var(--g)">0</div></div>
+    <div class="panel kpi r d8"><div class="lbl">seconds per tick, end to end</div><div class="big" style="color:var(--b)">~12</div></div>
+  </div>
+  <div class="brand">WRAITH</div><div class="num">08 / 10</div>
+</section>
+
+<!-- 9 · IMPACT -->
+<section class="slide" data-n="9">
+  <div class="kicker r d1">Impact</div>
+  <h2 class="r d2">Halloween is the demo.<br/><span style="color:var(--t)">Incidents are the market.</span></h2>
+  <div class="uses">
+    <div class="panel use r d3"><div class="e">☁️</div><div class="h">SRE on-call</div><div class="s">“us-east-1 is throwing 5xx” → a verified war room with status-page evidence, failover runbook and a status update drafted.</div></div>
+    <div class="panel use r d4"><div class="e">🏟️</div><div class="h">Venues & events</div><div class="s">Power cuts, crowd surges, medical calls — a live floor plan, civilian tracker and a single channel to dispatch on.</div></div>
+    <div class="panel use r d5"><div class="e">🔥</div><div class="h">Emergency ops</div><div class="s">Asked about wildfire smoke, it checked the live web: “AQI is 20–52 today; smoke reports are from 2023.” → observe. Grounding changes the decision.</div></div>
+  </div>
+  <p class="lede r d7" style="font-size:28px">Any incident in plain English → a bespoke, cited, operable station in seconds. Open source, one command to run, works offline from recordings.</p>
+  <div class="brand">WRAITH</div><div class="num">09 / 10</div>
+</section>
+
+<!-- 10 · CLOSE -->
+<section class="slide" data-n="10">
+  <div class="kicker r d1">Why this idea</div>
+  <h2 class="r d2" style="font-size:64px">100 AI judges. 100 first-place votes.</h2>
+  <p class="lede r d3" style="font-size:24px;max-width:1150px">Before writing a line of code we ran a red team of 100 persona judges (sponsor engineers, VCs, UX leads, skeptics, the auto-reviewer) over 10 ideas on the official rubric. Borda score:</p>
+  <div class="bars" id="bars"></div>
+  <div class="panel cta r d10">
+    <div class="kicker" style="font-size:16px">Try it</div>
+    <div class="mono" style="font-size:26px;margin-top:16px;color:var(--bone)">github.com/vnmoorthy/wraith</div>
+    <div class="mono" style="font-size:22px;margin-top:20px;color:#d9f99d">$ ./run.sh</div>
+    <p class="lede" style="font-size:22px;margin-top:20px">CrewAI · Parasail · You.com · One<br/>MIT licensed.</p>
+    <div style="font-family:Cinzel,serif;font-weight:900;font-size:56px;letter-spacing:.2em;margin-top:30px;text-shadow:0 0 40px rgba(167,139,250,.6)">WRAITH</div>
+  </div>
+  <div class="num">10 / 10</div>
+</section>
+
+</div>
+<div id="progress"></div>
+<div id="hint">← → / space · F fullscreen</div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')]
+  let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1))
+  const stage = document.getElementById('stage')
+  function fit() {
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080)
+    stage.style.transform = `scale(${s}) translate(-50%, -50%)`
+    stage.style.left = '50%'; stage.style.top = '50%'
+    stage.style.transformOrigin = '0 0'
+    stage.style.transform = `translate(-50%, -50%) scale(${s})`
+    stage.style.transformOrigin = 'center'
+  }
+  addEventListener('resize', fit); fit()
+
+  // runes + title letters
+  const R = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ'
+  document.getElementById('runes').innerHTML = R.split('').map((c, k) => `<span style="transform:rotate(${k / R.length * 360}deg) translateY(-310px)">${c}</span>`).join('')
+  const wt = document.getElementById('wtitle')
+  wt.innerHTML = wt.textContent.split('').map((c, k) => `<span style="animation-delay:${0.25 + k * 0.12}s">${c}</span>`).join('')
+
+  // ranking bars (from the 100-judge red team)
+  const board = [['WRAITH — the self-building war room', 1000, 1], ['Hallucination Exorcist', 852], ['Graveyard Shift (SRE swarm)', 703], ['Séance (generative UI for the web)', 660], ['Poltergeist (red-team arena)', 630], ['3D digital twin', 566], ['Necropolis (zombie-code)', 449], ['Banshee (disaster early warning)', 289], ['Haunted Mansion (Discord game)', 195], ['Frankenstein (agent builder)', 156]]
+  document.getElementById('bars').innerHTML = board.map(([n, v, w], k) => `<div class="bar ${w ? 'win' : ''} r" style="animation-delay:${0.5 + k * 0.08}s"><span style="${w ? 'color:#5eead4;font-weight:800' : 'color:#9a93ad'}">${n}</span><div class="track"><div class="fill" style="--w:${v / 10}%;animation-delay:${0.8 + k * 0.08}s"></div></div><span class="sc">${v}</span></div>`).join('')
+
+  // JSON stream for slide 3
+  const json = `{
+  "station_title": "WRAITH // Loft Incident Station — Tick-142",
+  "theme": "spectral-goth-dark",
+  "ui_components_ordered": [
+    { "component": "ThreatHeader", "source": "router",
+      "props": { "severity_tier": "CRITICAL_HAUNT", "threat_level": 5 } },
+    { "component": "EMFRadar", "source": "sentinel",
+      "props": { "current_value": 98, "status": "danger" } },
+    { "component": "DecisionCard", "source": "commander",
+      "props": { "action": "evacuate", "confidence": 0.91 } },
+    { "component": "EvidenceRail", "source": "verifier",
+      "props": { "claims": [ { "verdict": "confirmed" } ] } },
+    { "component": "CountermeasureSelector", "source": "archivist",
+      "props": { "options": [ "salt_line_deployer", "uv_lanterns" ] } },
+    { "component": "DispatchConsole", "source": "commander",
+      "props": { "channel": "#loft-incident", "urgency": "flash" } }
+  ]
+}`
+  let streamTimer = null
+  function playStream() {
+    const box = document.getElementById('jsonstream'), comps = [...document.querySelectorAll('#compgrid .comp')]
+    comps.forEach((c) => c.classList.remove('on'))
+    clearInterval(streamTimer); let k = 0, shown = 0
+    const marks = ['ThreatHeader', 'EMFRadar', 'DecisionCard', 'EvidenceRail', 'CountermeasureSelector', 'DispatchConsole']
+    streamTimer = setInterval(() => {
+      k = Math.min(json.length, k + 6)
+      const txt = json.slice(0, k)
+      box.innerHTML = txt.replace(/("[^"]*")(\s*:)/g, '<span>$1</span><span class="p">$2</span>').replace(/: ("[^"]*")/g, ': <span class="s">$1</span>').replace(/(\d+\.?\d*)/g, '<span class="n">$1</span>')
+      marks.forEach((m, j) => { if (j >= shown && txt.includes(`"${m}"`) && txt.indexOf('}', txt.lastIndexOf(`"${m}"`)) > 0) { comps[j === 4 ? 4 : j === 3 ? 3 : j].classList.add('on'); if (j === 0) comps[0].classList.add('on'); shown = j + 1 } })
+      if (k >= json.length) { clearInterval(streamTimer); comps.forEach((c) => c.classList.add('on')) }
+    }, 28)
+  }
+
+  const STATIC = new URLSearchParams(location.search).has('static')
+  if (STATIC) document.body.classList.add('static')
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n))
+    slides.forEach((s, k) => {
+      if (k === i) { s.classList.remove('active'); void s.offsetWidth; s.classList.add('active') } else s.classList.remove('active')
+    })
+    document.getElementById('progress').style.width = `${((i + 1) / slides.length) * 100}%`
+    history.replaceState(null, '', `#${i + 1}`)
+    if (i === 2 && !STATIC) playStream()
+    if (i === 2 && STATIC) document.getElementById('jsonstream').textContent = json
+  }
+  addEventListener('keydown', (e) => {
+    if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) show(i + 1)
+    if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) show(i - 1)
+    if (e.key === 'Home') show(0)
+    if (e.key === 'End') show(slides.length - 1)
+    if (e.key.toLowerCase() === 'f') document.documentElement.requestFullscreen?.()
+  })
+  addEventListener('click', (e) => { if (e.clientX > innerWidth / 3) show(i + 1); else show(i - 1) })
+  show(i)
+</script>
+</body>
+</html>

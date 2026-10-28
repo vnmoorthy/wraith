@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1280px;height:640px;overflow:hidden;background:#06050a;font-family:Inter,sans-serif;color:#ece7f6;position:relative}
+.fog{position:absolute;inset:-20%;background:radial-gradient(40% 35% at 18% 40%,rgba(124,58,237,.28),transparent 70%),radial-gradient(35% 35% at 85% 75%,rgba(20,184,166,.18),transparent 70%),radial-gradient(30% 25% at 60% 10%,rgba(244,63,94,.12),transparent 70%)}
+.scan{position:absolute;inset:0;opacity:.05;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 3px)}
+.left{position:absolute;left:64px;top:118px;width:520px;z-index:3}
+.k{font:500 13px 'JetBrains Mono',monospace;letter-spacing:.32em;color:#a78bfa}
+h1{font:900 104px Cinzel,serif;letter-spacing:.12em;margin-top:14px;text-shadow:0 0 50px rgba(167,139,250,.6)}
+.t{font:600 30px Inter;margin-top:6px}
+.s{font:400 17px/1.55 Inter;color:#9a93ad;margin-top:18px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.chip{font:500 13px 'JetBrains Mono',monospace;padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:flex;gap:8px;align-items:center}
+.d{width:8px;height:8px;border-radius:50%}
+.shot{position:absolute;border-radius:14px;overflow:hidden;border:1px solid rgba(167,139,250,.45);box-shadow:0 40px 120px -30px rgba(167,139,250,.75),0 0 0 1px rgba(0,0,0,.5)}
+.a{left:600px;top:58px;width:760px;transform:perspective(1600px) rotateY(-14deg) rotateX(4deg);z-index:2}
+.b{left:820px;top:330px;width:520px;transform:perspective(1600px) rotateY(-14deg) rotateX(4deg);z-index:2;border-color:rgba(251,191,36,.5);box-shadow:0 40px 120px -30px rgba(251,191,36,.5)}
+.shot img{display:block;width:100%}
+.ghost{position:absolute;left:486px;top:96px;font-size:64px;filter:drop-shadow(0 0 30px rgba(167,139,250,.8));z-index:4}
+</style></head><body>
+<div class="fog"></div><div class="scan"></div>
+<div class="shot a"><img src="station-haunting.jpg"></div>
+<div class="shot b"><img src="station-reality.jpg"></div>
+<div class="ghost">👻</div>
+<div class="left">
+ <div class="k">HACK WITH YOU · HALLOWEEN 2026</div>
+ <h1>WRAITH</h1>
+ <div class="t">The war room that builds itself.</div>
+ <div class="s">A CrewAI swarm with partial knowledge reads any incident, verifies it against the live web, and Parasail streams a bespoke, operable command station into existence — then One acts on it.</div>
+ <div class="chips">
+  <div class="chip"><span class="d" style="background:#fb923c"></span>CrewAI</div>
+  <div class="chip"><span class="d" style="background:#a78bfa"></span>Parasail</div>
+  <div class="chip"><span class="d" style="background:#60a5fa"></span>You.com</div>
+  <div class="chip"><span class="d" style="background:#4ade80"></span>One</div>
+ </div>
+</div>
+</body></html>

@@ -23,7 +23,11 @@ W, H, FPS = 1920, 1080, 30
 
 
 def run(*args: str) -> None:
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *args], check=True)
+    # Every part is encoded TV-range yuv420p so the concat never shifts white to grey.
+    out = list(args)
+    if out and out[-1].endswith(".mp4"):
+        out = out[:-1] + ["-pix_fmt", "yuv420p", "-color_range", "tv", "-colorspace", "bt709", out[-1]]
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *out], check=True)
 
 
 def duration(path: Path) -> float:
@@ -94,11 +98,18 @@ def build(draft: bool) -> Path:
     circle_mask(mask, 340)
     parts = []
 
-    # intro card
-    card_png("The war room that builds itself.", "Wraith · Hack with YOU, Halloween 2026", tmp / "intro.png")
-    run("-loop", "1", "-t", "2.4", "-i", str(tmp / "intro.png"), "-f", "lavfi", "-t", "2.4", "-i", "anullsrc=r=48000:cl=stereo",
-        "-vf", f"scale={W}:{H},fps={FPS},format=yuv420p,fade=in:0:12", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest",
-        str(tmp / "p00.mp4"))
+    # cold open: a few silent seconds of the product itself, then the founder
+    cold = script.get("coldopen")
+    if cold:
+        a, b = cold["window"]
+        run("-ss", f"{a}", "-t", f"{b - a}", "-i", str(HERE / "clips" / f"{cold['clip']}.mp4"), "-f", "lavfi", "-t", f"{b - a}",
+            "-i", "anullsrc=r=48000:cl=stereo", "-vf", f"scale={W}:{H},fps={FPS},format=yuv420p,fade=in:0:9",
+            "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", str(tmp / "p00.mp4"))
+    else:
+        card_png("The war room that builds itself.", "Wraith · Hack with YOU, Halloween 2026", tmp / "intro.png")
+        run("-loop", "1", "-t", "2.4", "-i", str(tmp / "intro.png"), "-f", "lavfi", "-t", "2.4", "-i", "anullsrc=r=48000:cl=stereo",
+            "-vf", f"scale={W}:{H},fps={FPS},format=yuv420p,fade=in:0:12", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest",
+            str(tmp / "p00.mp4"))
     parts.append(tmp / "p00.mp4")
 
     for i, seg in enumerate(segs, start=1):

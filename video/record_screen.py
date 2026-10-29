@@ -90,7 +90,8 @@ async def record(url: str, out: Path, seconds: float, width: int, height: int, c
             f.write(f"file '{frames[-1][1]}'\n")
         out.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(concat),
-                        "-vf", f"fps=30,scale={width}:{height}:flags=lanczos,format=yuv420p", "-c:v", "libx264",
+                        "-vf", f"fps=30,scale={width}:{height}:flags=lanczos:in_range=pc:out_range=tv,format=yuv420p",
+                        "-pix_fmt", "yuv420p", "-color_range", "tv", "-colorspace", "bt709", "-c:v", "libx264",
                         "-preset", "medium", "-crf", "18", str(out)], check=True)
         print(f"{out}  {len(frames)} frames  {seconds:.0f}s")
     finally:

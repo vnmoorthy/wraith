@@ -147,8 +147,9 @@ async def resolve_discord(steps: list | None = None) -> dict:
     steps.append({"tool": "list_one_integrations", "ms": int((time.perf_counter() - t0) * 1000),
                   "detail": f"{len(conns)} Discord connection{'s' if len(conns) != 1 else ''}"})
     t1 = time.perf_counter()
-    action = await find_action("discord", "send a message to a channel",
-                               "post a containment alert to the venue incident channel")
+    action = _resolved.get("find") or await find_action("discord", "send a message to a channel",
+                                                        "post a containment alert to the venue incident channel")
+    _resolved["find"] = action
     steps.append({"tool": "find_one_actions", "ms": int((time.perf_counter() - t1) * 1000),
                   "detail": f"{action.get('title') or 'no action'} · {action.get('method')} {action.get('path')}"})
     if not action["action_id"]:

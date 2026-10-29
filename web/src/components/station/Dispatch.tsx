@@ -76,7 +76,9 @@ export function DispatchConsole({ spec, building }: { spec: ComponentSpec; build
             <span className="text-fog">· via One → Discord</span>
             <span className="serif ml-auto text-[13px] italic" style={{ color: urgency === 'flash' ? 'var(--danger)' : hold ? 'var(--ok)' : 'var(--warn)' }}>{urgency}</span>
           </div>
-          <div className="serif max-h-48 overflow-auto whitespace-pre-wrap border-l border-[var(--hair-2)] pl-4 text-[15px] leading-[1.6] text-bone">{preview || 'Writing the message from what you have done on this station…'}</div>
+          <div className="serif max-h-48 overflow-auto whitespace-pre-wrap border-l border-[var(--hair-2)] pl-4 text-[15px] leading-[1.6] text-bone">
+            {preview ? preview.split(/(\*\*[^*]+\*\*)/).map((part, i) => part.startsWith('**') ? <b key={i}>{part.slice(2, -2)}</b> : <span key={i}>{part}</span>) : 'Writing the message from what you have done on this station…'}
+          </div>
           <div className="mt-2 text-[11.5px] text-fog">Rewritten live from your choices on this station: countermeasures, isolated sectors, civilians, protocol.</div>
         </div>
         <div className="flex flex-col gap-3">

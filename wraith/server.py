@@ -58,12 +58,15 @@ async def _warm():
         await grimoire.search("warm up", k=1)
     except Exception as exc:  # noqa: BLE001
         print(f"[wraith] grimoire not built yet: {exc}")
-    try:  # CrewAI builds its Flow graph and agent executors lazily; pay that once now, not on stage
+    try:  # CrewAI builds schemas and executors lazily; run one real kickoff per brief type, one at a time
+        from .schemas import ArchivistBrief, CommanderDecision, SentinelBrief, VerifierBrief
         from .swarm import WraithFlow, _agent
         WraithFlow()
-        _agent("Sentinel", "warm", "warm", config.MODEL_SWARM)
+        for cls in (SentinelBrief, ArchivistBrief, VerifierBrief, CommanderDecision):
+            agent = _agent("Warmup", "warm up", "warm up", config.MODEL_SWARM)
+            await asyncio.wait_for(agent.kickoff_async("Return a minimal valid object.", response_format=cls), timeout=40)
     except Exception as exc:  # noqa: BLE001
-        print(f"[wraith] crewai warm-up skipped: {exc}")
+        print(f"[wraith] crewai warm-up partial: {type(exc).__name__}")
     models = {config.MODEL_ROUTER, config.MODEL_SWARM, config.MODEL_VERIFIER, config.MODEL_COMMANDER, config.MODEL_COMPILER}
     await asyncio.gather(*(parasail.chat([{"role": "user", "content": "ok"}], model=m, max_tokens=4) for m in models),
                          scenario.oracle("ping"), return_exceptions=True)

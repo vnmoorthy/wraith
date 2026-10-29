@@ -45,7 +45,7 @@ The same engine plays the venue's **Track 1 scenario feed on autopilot** — and
 
 <div align="center">
 <img src="docs/img/verdict.jpg" alt="The verdict: without the live web, evacuate; with You.com, observe" width="100%" />
-<sub><b>2 · The commander decides — and you see what the live web changed.</b> Wildfire smoke over the Bay: without You.com the commander would have moved 300 people; with today's air quality it says <i>observe</i>.</sub>
+<sub><b>2 · The commander decides — and you see what the live web changed.</b> Wildfire smoke over the Bay: without You.com the commander would have moved 300 people; with today's air quality it says <i>observe</i>. How the fork is computed: the same Commander gets the same three briefs again, in parallel, with the Verifier's evidence replaced by "the live web did not answer" (<code>counterfactual()</code> in <code>wraith/swarm.py</code>).</sub>
 </div>
 
 <br/>

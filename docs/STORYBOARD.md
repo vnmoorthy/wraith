@@ -6,15 +6,16 @@ Keys during the demo: **click an underlined incident** to summon · **Space** re
 
 | Time | Screen | What you say | What you do |
 |---|---|---|---|
-| **0:00–0:08** | App, idle page | "At this venue tonight, the coffee bar hit minus four degrees, and four engineers stopped answering." | Click **a level-5 phantom pinning four engineers in the coffee bar**. |
-| **0:08–0:30** | The incident sheet: Read → Gather → Deliberate | "A CrewAI flow reads it and routes it — haunting. Three agents go to work, and each one sees only part of the picture. The Sentinel reads the instruments. The Archivist searches our playbooks with Parasail embeddings. The Verifier checks the live web with You.com — is it just a cold night? A power cut?" | Point at the three columns as they type. Point at the You.com queries under the Verifier. |
-| **0:30–0:45** | **The verdict** | "Contain. Evacuate. Observe. They disagree. The commander only sees their briefs — and it breaks the tie." (pause) "Evacuate." | Stay silent for one beat when *Evacuate.* lands. Point at *carried* / *overruled*. |
-| **0:45–1:10** | The station writes itself | "None of this existed fifteen seconds ago. Parasail is writing the interface — every section chosen, ordered and filled by the model, for this incident, while you watch." | Let the camera follow the pen. Toggle **X-ray** for three seconds to show the JSON arriving, then off. |
-| **1:10–1:30** | Operate + Dispatch | "It's a console, not a picture. Start the evacuation — the alert rewrites itself — and One sends it, step by step: list, find, execute." | Click **begin evac** → **Dispatch ↓** → **Dispatch** → **Confirm**. Point at One's three-step ladder. |
-| **1:30–1:40** | Next tick | "And when it gets worse — EMF from ninety-eight to one-thirty-one — the war room rebuilds itself." | Click **Next tick →** (optional if time is short). |
-| **1:40–2:20** | **The Monday turn**: ← New incident → Real world → *Is it us or AWS?* | "That's Halloween. Now it's Monday, 9:14, and checkout is down. Is it us, or is it AWS?" … "Different incident, different branch, a different interface: telemetry, status-page evidence, a failover runbook." | **← New incident** → the *a checkout outage in us-east-1* link. Narrate the Sentinel reading 5xx at 78× baseline. |
-| **2:20–2:40** | Replays → wildfire, or slide 7 | "And here's what the live web is worth. Wildfire smoke over the Bay. Without You.com, the commander would have moved three hundred people. With today's air quality, it said observe." | **Replays** → *wildfire* at 2×, or the deck. |
-| **2:40–3:00** | Deck slide 10 | "We picked this idea by running a hundred AI judges against ten ideas — then two hundred more red-teamed the product. Open source, one command. Wraith: the war room that builds itself." | End on slide 10. |
+| **0:00–0:06** | App, idle page | "At this venue tonight, the coffee bar hit minus four degrees, and four engineers stopped answering." | Click **a level-5 phantom pinning four engineers in the coffee bar**. |
+| **0:06–0:16** | Incident sheet: Read → Gather → Deliberate | "It routes it — haunting. Three agents, each seeing only part of the picture: the instruments, our playbooks on Parasail, the live web on You.com." | Read the votes out as they land: *contain… evacuate… observe.* |
+| **0:16–0:26** | **The verdict** (held ~4 s) | "They don't agree. The commander sees only their briefs, and breaks the tie." (beat) "Evacuate." | Silence for one beat when *Evacuate.* lands. Point at *carried / overruled*. |
+| **0:26–0:50** | The station writes itself | "None of this existed fifteen seconds ago. Parasail is writing the interface, for this incident, while you watch." | Hands off. Let the camera follow the pen, then pull back. |
+| **0:50–1:15** | Operate + Dispatch | "It's a console. Isolate the coffee bar, start the evacuation — the alert rewrites itself — and One acts on it: list, find, execute." | Click the coffee bar on the map → **Dispatch ↓** → **Dispatch** → **Confirm**. Point at One's three steps. |
+| **1:15–2:00** | **The Monday turn**: ← New incident → *a checkout outage in us-east-1* | "That's Halloween. Now it's Monday, 9:14, and checkout is down. Is it us, or AWS?" … "A different incident gets a different interface: telemetry at 78× baseline, status-page evidence, a runbook." | **← New incident** → the us-east-1 link. |
+| **2:00–2:30** | Deck slide 7 (the fork) | "Same agents, same model. Wildfire smoke: without the live web, it would have moved three hundred people. With You.com it read today's air, and they stayed." | Switch to the deck tab, slide 7. |
+| **2:30–3:00** | Deck slide 10 | "Every incident gets its own war room in seconds. Every claim has a receipt. A human presses the button. This is Wraith." | **End** key to slide 10. Stop. |
+
+Optional, only if a judge asks: **X-ray** in the header (the raw JSON stream), **Next tick →** (the station rebuilds as EMF rises 98 → 131), **Autopilot** (Track 1 practice, 3/3, zero false alarms).
 
 ## If something breaks on stage
 

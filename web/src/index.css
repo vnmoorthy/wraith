@@ -96,7 +96,7 @@ body {
 }
 @keyframes ink { from { background-position: -40% 0; } to { background-position: 140% 0; } }
 
-.caret::after { content: "▍"; animation: blink 1s steps(1) infinite; color: var(--accent); margin-left: 1px; }
+.caret::after { content: ""; display: inline-block; width: 2px; height: 0.9em; margin-left: 2px; vertical-align: -0.1em; background: var(--beige-ink); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .pulse-ring { animation: pulseRing 2.2s ease-out infinite; }
@@ -128,3 +128,7 @@ textarea, input { font-family: inherit; }
 .strike { position: relative; }
 .strike::after { content: ""; position: absolute; left: -2%; top: 55%; height: 2px; width: 0; background: var(--ink); animation: strike 420ms cubic-bezier(.4,.1,.2,1) forwards 250ms; }
 @keyframes strike { to { width: 104%; } }
+
+/* For display-size words the highlighter sits inside the letters, not under them. */
+.hl-lg { background-image: linear-gradient(transparent 55%, var(--beige) 55%, var(--beige) 88%, transparent 88%); background-repeat: no-repeat; background-size: 100% 100%; }
+.hl-lg.hl-anim { background-size: 0% 100%; animation: hl 900ms cubic-bezier(.2,.8,.2,1) forwards 200ms; }

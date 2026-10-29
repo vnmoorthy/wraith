@@ -278,7 +278,7 @@
     <div class="panel node r d6" style="left:1340px;top:0px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">④ Swarm</div><div class="s">Sentinel · Archivist · Verifier<br/>partial knowledge, parallel</div></div>
     <div class="panel node r d7" style="left:1340px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑤ Commander</div><div class="s">sees only the briefs<br/>contain · evacuate · observe</div></div>
     <div class="panel node r d8" style="left:893px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑥ Compiler</div><div class="s">Parasail stream:true<br/>schema-locked manifest</div></div>
-    <div class="panel node r d9" style="left:447px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑦ Live station</div><div class="s">WebSocket → partial-JSON<br/>14 operable components</div></div>
+    <div class="panel node r d9" style="left:447px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑦ Live station</div><div class="s">WebSocket → partial JSON<br/>10–13 sections per incident</div></div>
     <div class="panel node r d10" style="left:0px;top:300px;width:340px;min-height:180px;border-color:#e3ded4"><div class="h">⑧ One → Discord</div><div class="s">list → find → execute<br/>payload from live state</div></div>
   </div>
   <div class="brand">Wraith</div><div class="num">04 / 10</div>
@@ -290,11 +290,11 @@
   <h2 class="r d2">No agent sees everything.</h2>
   <p class="lede r d3">Each agent gets only its slice of the world — the way a real incident team works. The Commander never sees raw data, only the briefs, and has to resolve their disagreements.</p>
   <div class="agents">
-    <div class="panel agent r d4" style="border-color:#e3ded4"><div class="n" style="color:#2b4e86">◉ Sentinel</div><div class="k"><span style="background:#f4efe6;color:#2b4e86">EMF · thermal · motion z-scores</span><span class="blind">sightings</span><span class="blind">lore</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Coffee bar reads 98 mG (z=11.5) and −4 °C (z=−10). Cold plus EMF, not motion alone — this is not a crowd.” → <b style="color:var(--a)">contain</b></p></div>
-    <div class="panel agent r d5" style="border-color:#e3ded4"><div class="n" style="color:#7a3e6e">✶ Archivist</div><div class="k"><span style="background:#f4efe6;color:#7a3e6e">grimoire · BGE-M3 retrieval · oracle</span><span class="blind">raw sensors</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Level-5 phantom confirmed by EMF and cold; evacuate pinned civilians before banishment.” → <b style="color:var(--r)">evacuate</b></p></div>
-    <div class="panel agent r d6" style="border-color:#e3ded4"><div class="n" style="color:#2d6a4a">⌖ Verifier</div><div class="k"><span style="background:#f4efe6;color:#2d6a4a">You.com highlights · page contents</span><span class="blind">sensors</span><span class="blind">lore</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Mild outdoor weather and no grid outage at the address: mundane causes don’t explain the readings.” → <b style="color:var(--g)">observe</b></p></div>
+    <div class="panel agent r d4" style="border-color:#e3ded4"><div class="n" style="color:#2b4e86">◉ Sentinel</div><div class="k"><span style="background:#f4efe6;color:#2b4e86">EMF · thermal · motion z-scores</span><span class="blind">sightings</span><span class="blind">lore</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Coffee bar shows EMF z=11.5 and temp z=−10.0, signature 1.0. Main stage is baseline.” → <b style="color:var(--a)">contain</b></p></div>
+    <div class="panel agent r d5" style="border-color:#e3ded4"><div class="n" style="color:#7a3e6e">✶ Archivist</div><div class="k"><span style="background:#f4efe6;color:#7a3e6e">grimoire · BGE-M3 retrieval · oracle</span><span class="blind">raw sensors</span><span class="blind">web</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Seal sector, hold perimeter, two-team entry, extract pinned via service corridor, no direct engagement.” → <b style="color:var(--r)">evacuate</b></p></div>
+    <div class="panel agent r d6" style="border-color:#e3ded4"><div class="n" style="color:#2d6a4a">⌖ Verifier</div><div class="k"><span style="background:#f4efe6;color:#2d6a4a">You.com highlights · page contents</span><span class="blind">sensors</span><span class="blind">lore</span></div><p class="lede" style="font-size:21px;margin-top:18px">“Indoor −4 °C cannot come from SF weather (outdoor ~10–19 °C); no grid or network outage found.” → <b style="color:var(--g)">observe</b></p></div>
   </div>
-  <div class="panel cmd r d8"><div style="font-size:36px;font-weight:800;color:var(--a)">♛ Commander → EVACUATE</div><div class="lede" style="font-size:22px;margin:10px 0 0;max-width:none">“Sentinel urged contain, Verifier urged observe. Civilian exposure and mobility break the tie toward evacuate.” <span class="mono" style="font-size:16px;color:var(--fog)">— real output, tick 142</span></div></div>
+  <div class="panel cmd r d8"><div style="font-size:36px;font-weight:800;color:var(--a)">♛ Commander → EVACUATE</div><div class="lede" style="font-size:22px;margin:10px 0 0;max-width:none">“Verifier urged observe (credibility 0.15); overruled — web cannot confirm indoor readings, but pinned civilians decide.” <span class="mono" style="font-size:16px;color:var(--fog)">— real output, tick 142</span></div></div>
   <div class="brand">Wraith</div><div class="num">05 / 10</div>
 </section>
 
@@ -316,8 +316,8 @@
   <div class="kicker r d1">Live demo</div>
   <h2 class="r d2" style="font-size:52px">Same engine. Different incident. Different interface.</h2>
   <div class="shots">
-    <div class="shot r d3"><img src="../img/station-haunting.jpg" onerror="this.style.minHeight='520px';this.style.visibility='hidden'" /><div class="scan"></div><div class="cap" style="color:var(--r)">haunting · venue feed · spectral-goth-dark</div></div>
-    <div class="shot r d5"><img src="../img/station-reality.jpg" onerror="this.style.minHeight='520px';this.style.visibility='hidden'" /><div class="scan" style="animation-delay:1.2s"></div><div class="cap" style="color:var(--a)">reality mode · power cut at the Loft · daylight-ops</div></div>
+    <div class="shot r d3"><img src="../img/verdict.jpg" /><div class="scan"></div><div class="cap" style="color:var(--r)">the live web changes the decision · wildfire</div></div>
+    <div class="shot r d5"><img src="../img/station-haunting.jpg" /><div class="scan" style="animation-delay:1.2s"></div><div class="cap" style="color:var(--a)">then the station writes itself · tick 142</div></div>
   </div>
   <div class="beats">
     <div class="beat r d6"><b>01</b> judge types an incident</div>
@@ -353,7 +353,7 @@
   <div class="uses">
     <div class="panel use r d3"><div class="e">☁️</div><div class="h">SRE on-call</div><div class="s">“us-east-1 is throwing 5xx” → a verified war room with status-page evidence, failover runbook and a status update drafted.</div></div>
     <div class="panel use r d4"><div class="e">🏟️</div><div class="h">Venues & events</div><div class="s">Power cuts, crowd surges, medical calls — a live floor plan, civilian tracker and a single channel to dispatch on.</div></div>
-    <div class="panel use r d5"><div class="e">🔥</div><div class="h">Emergency ops</div><div class="s">Asked about wildfire smoke, it checked the live web: “AQI is 20–52 today; smoke reports are from 2023.” → observe. Grounding changes the decision.</div></div>
+    <div class="panel use r d5"><div class="e">🔥</div><div class="h">Emergency ops</div><div class="s">Asked about wildfire smoke, it checked the live web: “Live AQI 20–56 Good/Moderate contradicts heavy smoke.” Without You.com: evacuate. With it: observe.</div></div>
   </div>
   <p class="lede r d7" style="font-size:28px">Any incident in plain English → a bespoke, cited, operable station in seconds. Open source, one command to run, works offline from recordings.</p>
   <div class="brand">Wraith</div><div class="num">09 / 10</div>
@@ -361,17 +361,15 @@
 
 <!-- 10 · CLOSE -->
 <section class="slide" data-n="10">
-  <div class="kicker r d1">Why this idea</div>
-  <h2 class="r d2" style="font-size:64px">100 AI judges. 100 first-place votes.</h2>
-  <p class="lede r d3" style="font-size:24px;max-width:1150px">Before writing a line of code, 100 persona judges (sponsor engineers, VCs, UX leads, skeptics, the auto-reviewer) scored 10 ideas on the official rubric. Then two more rounds of 100 agents red-teamed the product itself. Borda score:</p>
-  <div class="bars" id="bars"></div>
-  <div class="panel cta r d10">
-    <div class="kicker" style="font-size:16px">Try it</div>
-    <div class="mono" style="font-size:26px;margin-top:16px;color:var(--bone)">github.com/vnmoorthy/wraith</div>
-    <div class="mono" style="font-size:22px;margin-top:20px;color:#2d6a4a">$ ./run.sh</div>
-    <p class="lede" style="font-size:22px;margin-top:20px">CrewAI · Parasail · You.com · One<br/>MIT licensed.</p>
-    <div style="font-family:Newsreader,Georgia,serif;font-weight:900;font-size:56px;letter-spacing:.2em;margin-top:30px;text-shadow:0 0 40px rgba(167,139,250,.6)">WRAITH</div>
+  <div class="kicker r d1">Why it matters</div>
+  <h2 class="r d2" style="font-size:72px;max-width:1500px">Same agents. Same model. The only difference was the truth.</h2>
+  <p class="lede r d4" style="font-size:30px;max-width:1300px">Without the live web it would have moved three hundred people. With You.com it read today’s air — and they stayed.</p>
+  <div class="kpis" style="margin-top:56px">
+    <div class="panel kpi r d6"><div class="lbl">to an operable station</div><div class="big">~15 s</div></div>
+    <div class="panel kpi r d7"><div class="lbl">every claim</div><div class="big" style="font-size:44px;margin-top:14px">cited &amp; dated</div></div>
+    <div class="panel kpi r d8"><div class="lbl">the last word</div><div class="big" style="font-size:44px;margin-top:14px">a human presses Dispatch</div></div>
   </div>
+  <p class="lede r d10" style="font-size:22px;margin-top:44px">We chose this idea with 100 AI judges (100/100 first-place votes), then 300 more red-teamed the product. Open source — <span class="mono">github.com/vnmoorthy/wraith</span> · <span class="mono">./run.sh</span></p>
   <div class="num">10 / 10</div>
 </section>
 
@@ -400,11 +398,12 @@
 
   // ranking bars (from the 100-judge red team)
   const board = [['WRAITH — the self-building war room', 1000, 1], ['Hallucination Exorcist', 852], ['Graveyard Shift (SRE swarm)', 703], ['Séance (generative UI for the web)', 660], ['Poltergeist (red-team arena)', 630], ['3D digital twin', 566], ['Necropolis (zombie-code)', 449], ['Banshee (disaster early warning)', 289], ['Haunted Mansion (Discord game)', 195], ['Frankenstein (agent builder)', 156]]
-  document.getElementById('bars').innerHTML = board.map(([n, v, w], k) => `<div class="bar ${w ? 'win' : ''} r" style="animation-delay:${0.5 + k * 0.08}s"><span style="${w ? 'color:#2d6a4a;font-weight:800' : 'color:#9a93ad'}">${n}</span><div class="track"><div class="fill" style="--w:${v / 10}%;animation-delay:${0.8 + k * 0.08}s"></div></div><span class="sc">${v}</span></div>`).join('')
+  const barsEl = document.getElementById('bars')
+  if (barsEl) barsEl.innerHTML = board.map(([n, v, w], k) => `<div class="bar ${w ? 'win' : ''} r" style="animation-delay:${0.5 + k * 0.08}s"><span style="${w ? 'color:#2d6a4a;font-weight:800' : 'color:#9a93ad'}">${n}</span><div class="track"><div class="fill" style="--w:${v / 10}%;animation-delay:${0.8 + k * 0.08}s"></div></div><span class="sc">${v}</span></div>`).join('')
 
   // JSON stream for slide 3
   const json = `{
-  "station_title": "WRAITH // Loft Incident Station — Tick-142",
+  "station_title": "Loft Incident Station",
   "theme": "spectral-goth-dark",
   "ui_components_ordered": [
     { "component": "ThreatHeader", "source": "router",
@@ -412,7 +411,7 @@
     { "component": "EMFRadar", "source": "sentinel",
       "props": { "current_value": 98, "status": "danger" } },
     { "component": "DecisionCard", "source": "commander",
-      "props": { "action": "evacuate", "confidence": 0.91 } },
+      "props": { "action": "evacuate", "confidence": 0.82 } },
     { "component": "EvidenceRail", "source": "verifier",
       "props": { "claims": [ { "verdict": "confirmed" } ] } },
     { "component": "CountermeasureSelector", "source": "archivist",

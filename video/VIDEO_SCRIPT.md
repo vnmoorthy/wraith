@@ -11,35 +11,35 @@ Speak like you are telling one smart friend. Slower than feels natural. Smile on
 ---
 
 **01 — on camera** *(caption: Every incident is different)*
-> Every incident is different. But the dashboard you get at three in the morning was built months ago, for somebody else's crisis.
+> Every incident is different. Every dashboard is the same: built months ago, for somebody else's crisis.
 
-**02 — over the product: the idle page, then a real incident is summoned**
-> So we built Wraith. You describe what's happening, and the war room builds itself.
+**02 — over the product** *(caption: Tell it what's happening)*
+> So we built Wraith. Tell it what's happening, and the war room builds itself.
 
-**03 — over the product: three agents writing their briefs**
-> A CrewAI flow reads the incident and routes it. Then three agents go to work, and each one only sees part of the picture. One reads the instruments. One searches our playbooks with Parasail embeddings. One checks the live web with You.com.
+**03 — over the product** *(caption: Three agents, three partial views)*
+> A CrewAI flow routes it to three agents, and each one sees only part of the picture: the instruments, our playbooks through Parasail, and the live web through You.com.
 
-**04 — over the product: "Evacuate." lands**
-> They disagree. Contain. Evacuate. Observe. The commander only sees their briefs, and it breaks the tie: evacuate. Four people are pinned in the contact zone.
+**04 — over the product** *(caption: The commander breaks the tie)*
+> They don't agree. The commander sees only their briefs, and it breaks the tie: evacuate.
 
-**05 — over the product: the station assembles, raw JSON streaming on the right**
-> And then — this is the part I love — Parasail streams the interface itself. Every panel you see was chosen, ordered and filled by the model, for this incident, while you watch.
+**05 — over the product** *(caption: Parasail writes the interface)*
+> None of this existed fifteen seconds ago. Parasail is writing the interface, for this incident, while you watch.
 
-**06 — over the product: start the evacuation, press Dispatch, One's three steps**
-> It's not a picture, it's a console. Start the evacuation, and the alert rewrites itself. One sends it to the team's Discord, step by step.
+**06 — over the product** *(caption: Operate it. One acts on it.)*
+> It's a console, not a picture. Start the evacuation, and the alert rewrites itself. One finds the Discord action and builds the request: list, find, execute.
 
-**07 — over the product: wildfire smoke, the counterfactual line**
-> Try a real one. Wildfire smoke over the Bay. Without the live web, the commander would have evacuated three hundred people. With You.com, it saw today's air quality, and said observe.
+**07 — over the product** *(caption: The live web changes the decision)*
+> Same agents, same model. Wildfire smoke over the Bay. Without the live web, it would have moved three hundred people. With You.com, it read today's air quality, and they stayed.
 
-**08 — over the product: the calm green control station**
-> And when it's just a crowd of people, it knows. No panic. Zero false alarms.
+**08 — over the product** *(caption: No false alarms)*
+> And when it's just a crowd of people, it knows. No false alarm.
 
 **09 — on camera** *(caption: Incidents are the market)*
-> Halloween is the demo. Incidents are the market: on-call engineers, venues, emergency teams. Any incident, its own war room, in about fifteen seconds.
+> Halloween is the demo. Incidents are the market: on-call engineers, venues, emergency teams.
 
 **10 — on camera** *(caption: github.com/vnmoorthy/wraith)*
-> We picked this idea by running a hundred AI judges against ten ideas. It won all hundred votes. Then two hundred more agents red-teamed the product. It's open source. This is Wraith, the war room that builds itself.
+> Every incident gets its own war room in seconds. Every claim has a receipt. A human presses the button. This is Wraith.
 
 ---
 
-Everything on screen in lines 02–08 is a real run: 02–04 is recorded live from the app; 05–08 are replays of recorded live runs (the app labels them "Replay · recorded run").
+The video opens cold on the product: four silent seconds of *Evacuate.* landing, before line 01. Line 02 is recorded live from the app; 03–08 are replays of recorded live runs (labelled "Replay · recorded run" in the app). If Discord is connected in One before you record, change 06's last sentence to "One sends it to the team's Discord: list, find, execute."

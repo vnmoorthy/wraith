@@ -117,8 +117,14 @@ async def _kick(run: Run, role: str, agent: Agent, prompt: str, model_cls):
     t0 = time.perf_counter()
     run.calls["crewai"] += 1
     try:
-        budget = 25 if role == "Commander" else 18
-        out = await asyncio.wait_for(agent.kickoff_async(prompt, response_format=model_cls), timeout=budget)
+        budget = 30 if role == "Commander" else 25
+        try:
+            out = await asyncio.wait_for(agent.kickoff_async(prompt, response_format=model_cls), timeout=budget)
+        except asyncio.TimeoutError:
+            raise
+        except Exception as first:  # noqa: BLE001 - CrewAI can race building schemas on a cold start; one retry fixes it
+            run.trace("crewai", f"{role.lower()} retry", int((time.perf_counter() - t0) * 1000), f"{type(first).__name__}: retried once", ok=False)
+            out = await asyncio.wait_for(agent.kickoff_async(prompt, response_format=model_cls), timeout=budget)
         brief = getattr(out, "pydantic", None)
         data = brief.model_dump() if brief is not None else model_cls.model_validate(parasail.parse_json(out.raw)).model_dump()
         data = json.loads(parasail.clean(json.dumps(data, ensure_ascii=False)))
@@ -182,6 +188,9 @@ class WraithFlow(Flow):
         route = json.loads(parasail.clean(json.dumps(Route.model_validate(route).model_dump(), ensure_ascii=False)))
         if route["incident_class"] == "control":
             route["severity_tier"] = "ALL_CLEAR"
+        elif route["severity_tier"] == "ALL_CLEAR":
+            # A real incident is never "all clear": people at risk make it severe.
+            route["severity_tier"] = "SEVERE" if route.get("civilians_at_risk", 0) > 0 else "ELEVATED"
         run.trace("parasail", f"router · {config.MODEL_ROUTER}", int((time.perf_counter() - t0) * 1000),
                   "json_schema-locked classification")
         run.state["route"] = route
@@ -330,7 +339,7 @@ class WraithFlow(Flow):
         if branch != "control":
             ver = intel.get("verifier", {})
             ev_lines = "\n".join(
-                f"[{e['id']}] {e['title']} ({e['url']})\n    {' | '.join(e.get('snippets') or [e.get('description', '')])[:400]}"
+                f"[{e['id']}] {e['title']} ({e['url']}) · published {str(e.get('page_age') or 'undated')[:10]}\n    {' | '.join(e.get('snippets') or [e.get('description', '')])[:400]}"
                 + (f"\n    PAGE: {e['excerpt'][:350]}" if e.get("excerpt") else "")
                 for e in ver.get("evidence", [])[:6])
             agents["Verifier"] = (
@@ -338,6 +347,7 @@ class WraithFlow(Flow):
                        "A field verifier with a live line to the open web through You.com. Cites everything.",
                        config.MODEL_VERIFIER),
                 "You are the Verifier. You see ONLY the checkable claims and live web evidence.\n"
+                f"TODAY: {time.strftime('%Y-%m-%d %H:%M')} local. A source older than 3 days cannot confirm that something is happening now: treat it as history.\n"
                 f"CLAIMS: {json.dumps(route['key_claims'])}\n"
                 f"EVIDENCE:\n{ev_lines or '(none: the web was unreachable or grounding is disabled — say so, credibility 0.3)'}\n"
                 "How to judge: the web cannot see inside the building. For a paranormal incident your job is to rule out MUNDANE causes."

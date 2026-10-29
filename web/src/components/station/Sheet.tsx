@@ -42,6 +42,7 @@ export function resolution(run: RunState): string {
   const top = Object.entries(tally).sort((a, b) => b[1] - a[1])
   if (top.length === 1) return top[0][0] === d.action ? `Unanimous — all ${votes.length} agents said ${top[0][0]}.` : `Overruled a unanimous ${top[0][0]}.`
   if (top.length === votes.length && votes.length === 3) return `Three agents. Three answers. The commander broke the tie.`
+  if (top.length > 1 && top[0][1] === top[1][1]) return `A split decision — the commander broke the tie for ${d.action}.`
   if (top[0][0] === d.action) return `Sided with the ${top[0][1]}–${votes.length - top[0][1]} majority.`
   return `Overruled the ${top[0][1]}–${votes.length - top[0][1]} majority.`
 }
@@ -97,12 +98,12 @@ function Fork({ run }: { run: RunState }) {
     <div className="mt-2 grid grid-cols-2 gap-10">
       <div className="beat" style={{ animationDelay: '0ms' }}>
         <div className="text-[13px] text-fog">Without the live web</div>
-        <div className="serif mt-1 text-[56px] italic leading-none text-fog"><span className="strike">{cap(alt.action)}.</span></div>
+        <div className="flex h-[84px] items-end"><div className="serif text-[56px] italic leading-none text-fog"><span className="strike">{cap(alt.action)}.</span></div></div>
         <div className="mt-2 text-[13px] text-fog">{typeof alt.confidence === 'number' && `${Math.round(alt.confidence * 100)}% · `}{alt.rationale}</div>
       </div>
       <div className="beat" style={{ animationDelay: '700ms' }}>
         <div className="text-[13px] text-ash">With You.com</div>
-        <div className="serif mt-1 text-[76px] italic leading-none" style={{ color: ACTION_COLOR[d.action] }}><span className="hl hl-anim">{cap(d.action)}.</span></div>
+        <div className="flex h-[84px] items-end"><div className="serif text-[76px] italic leading-none" style={{ color: ACTION_COLOR[d.action] }}><span className="hl-lg hl-anim">{cap(d.action)}.</span></div></div>
         <div className="mt-2 text-[13px] text-ash">{Math.round(d.confidence * 100)}% confidence · threat {d.threat_level}/5</div>
       </div>
     </div>
@@ -206,7 +207,7 @@ export function IncidentSheet({ run, written = 0, failed }: { run: RunState; wri
               {run.counterfactual?.action && run.counterfactual.action !== d.action ? <Fork run={run} /> : (
                 <div className="beat flex items-baseline gap-5">
                   <span className="serif text-[76px] font-normal italic leading-none" style={{ color: ACTION_COLOR[d.action] }}>
-                    <span className="hl hl-anim">{cap(d.action)}.</span>
+                    <span className="hl-lg hl-anim">{cap(d.action)}.</span>
                   </span>
                   <span className="text-[14px] text-ash">{Math.round(d.confidence * 100)}% confidence · threat {d.threat_level}/5 · decided in {((run.timeline.find((x) => x.label.startsWith('Commander:'))?.t || 0) / 1000).toFixed(1)} s</span>
                 </div>

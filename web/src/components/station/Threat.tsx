@@ -1,10 +1,13 @@
 import clsx from 'clsx'
 import { useEffect, useRef, useState } from 'react'
+import { useStation } from '../../lib/station'
 import type { ComponentSpec } from '../../lib/types'
 import { Frame, Meter, fmtSector, toneColor } from './Frame'
 
 export function ThreatHeader({ spec, building }: { spec: ComponentSpec; building?: boolean }) {
-  const p = spec.props || {}
+  const { run } = useStation()
+  // One source of truth: the Commander's numbers, so the header never disagrees with the verdict bar.
+  const p: Record<string, any> = { ...(spec.props || {}), ...(run.decision ? { confidence: run.decision.confidence, threat_level: run.decision.threat_level } : {}) }
   const level = Math.max(1, Math.min(5, Number(p.threat_level) || 1))
   const hot = level >= 4
   return (
